@@ -118,6 +118,7 @@ namespace r6_marketplace.Classes.Item
     public class Item
     {
         public string Name { get; set; }
+        public string assetUrl { get; set; }
         public SellStats? SellOrdersStats { get; set; }
         public BuyStats? BuyOrdersStats { get; set; }
     }
