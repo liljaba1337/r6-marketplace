@@ -1,7 +1,6 @@
 # R6 Marketplace API Wrapper
 
-A .NET wrapper for the Rainbow Six Siege Marketplace API — currently in development.  
-Built for ease of integration into .NET applications that interact with R6 item listings, inventories, and trading features.
+A .NET wrapper for the Rainbow Six Siege Marketplace API.  
 
 > **Note:** This project is under active development and is not yet feature-complete.
 
