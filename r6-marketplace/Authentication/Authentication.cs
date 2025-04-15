@@ -9,7 +9,7 @@ namespace r6_marketplace.Authentication
 {
     internal static class Authentication
     {
-        internal static async Task<string> AuthenticateAsync(string email, string password)
+        internal static async Task<r6_marketplace.Classes.AuthenticationResponse> AuthenticateAsync(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -40,8 +40,18 @@ namespace r6_marketplace.Authentication
             {
                 throw new Utils.Exceptions.InvalidCredentialsException($"An unknown error occurred. HTTP code: {response.StatusCode}");
             }
-
-            return "";
+            var content = await response.Content.ReadAsStringAsync();
+            r6_marketplace.Classes.AuthenticationResponse? _response =
+                System.Text.Json.JsonSerializer.Deserialize<r6_marketplace.Classes.AuthenticationResponse>(content);
+            if (_response == null)
+            {
+                throw new Utils.Exceptions.InvalidCredentialsException("An unknown error occurred. Couldn't deserialize the response.");
+            }
+            if(string.IsNullOrEmpty(_response.ticket))
+            {
+                throw new Utils.Exceptions.InvalidCredentialsException("An unknown error occurred. Token is null or empty.");
+            }
+            return _response;
         }
     }
 }

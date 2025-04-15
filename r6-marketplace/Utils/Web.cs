@@ -16,6 +16,15 @@ namespace r6_marketplace.Utils
 
         internal void SetToken(string token) => this.token = token;
 
+        internal void EnsureAuthenticated()
+        {
+            if (!isAuthenticated)
+            {
+                throw new InvalidOperationException("Client is not authenticated. " +
+                    "You must call AuthenticateAsync before using any other methods.");
+            }
+        }
+
         private static async Task<HttpResponseMessage> SendRawRequest(
                  Uri uri,
                  HttpMethod method,
@@ -52,7 +61,7 @@ namespace r6_marketplace.Utils
             }
 
             if (token != null)
-                headers["Authorization"] = "Bearer " + token;
+                headers["Authorization"] = token;
 
             if (useDefaultHeaders)
             {

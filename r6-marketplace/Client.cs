@@ -17,18 +17,11 @@ namespace r6_marketplace
 
             ItemInfoEndpoints = new ItemInfoEndpoints(web);
         }
-        private void EnsureAuthenticated()
-        {
-            if (!isAuthenticated)
-            {
-                throw new InvalidOperationException("Client is not authenticated. " +
-                    "You must call AuthenticateAsync before using any other methods.");
-            }
-        }
         public async Task AuthenticateAsync(string login, string password)
         {
-            string token = await Authentication.Authentication.AuthenticateAsync(login, password);
-            web.SetToken(token);
+            r6_marketplace.Classes.AuthenticationResponse response =
+                await Authentication.Authentication.AuthenticateAsync(login, password);
+            web.SetToken("Ubi_v1 t=" + response.ticket);
         }
     }
 }

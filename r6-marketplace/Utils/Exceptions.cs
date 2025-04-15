@@ -18,4 +18,16 @@ namespace r6_marketplace.Utils.Exceptions
         {
         }
     }
+    internal class UnsuccessfulStatusCodeException : Exception
+    {
+        public UnsuccessfulStatusCodeException(string message) : base(message)
+        {
+        }
+    }
+    internal class JsonDeserializationException : Exception
+    {
+        public JsonDeserializationException(string message) : base(message)
+        {
+        }
+    }
 }
