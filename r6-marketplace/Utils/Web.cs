@@ -7,7 +7,8 @@ namespace r6_marketplace.Utils
         private const string APP_ID = "80a4a0e8-8797-440f-8f4c-eaba87d0fdda";
         private const string SESSION_ID = "1e08944e-f5da-4ebf-afb3-664091601c4b";
         private HttpClient client = new HttpClient();
-        private string? token;
+        private static readonly HttpClient _defaultClient = new HttpClient();
+        internal string? token { get; set; }
         internal bool isAuthenticated => token != null;
         internal Web(HttpClient httpClient, string? token = null)
         {
@@ -15,7 +16,6 @@ namespace r6_marketplace.Utils
             client = httpClient;
         }
 
-        internal void SetToken(string token) => this.token = token;
         internal void SetHttpClient(HttpClient client) => this.client = client;
 
         internal void EnsureAuthenticated()
@@ -46,7 +46,7 @@ namespace r6_marketplace.Utils
                     request.Headers.Add(header.Key, header.Value);
                 }
             }
-            HttpClient client = web?.client ?? new HttpClient();
+            HttpClient client = web?.client ?? _defaultClient;
             return await client.SendAsync(request);
         }
         private static Dictionary<string, string> PrepareHeaders(
@@ -94,6 +94,17 @@ namespace r6_marketplace.Utils
             var finalHeaders = PrepareHeaders(headers, sendAuthToken ? token : null, useDefaultHeaders, local);
             return await SendRawRequest(uri, HttpMethod.Post, body, finalHeaders, this);
         }
+        internal async Task<HttpResponseMessage> Put(
+    Uri uri,
+    string? body = null,
+    Dictionary<string, string>? headers = null,
+    bool sendAuthToken = true,
+    bool useDefaultHeaders = true,
+    Data.Local local = Data.Local.en)
+        {
+            var finalHeaders = PrepareHeaders(headers, sendAuthToken ? token : null, useDefaultHeaders, local);
+            return await SendRawRequest(uri, HttpMethod.Put, body, finalHeaders, this);
+        }
 
         public static async Task<HttpResponseMessage> Get(
             Uri uri,
@@ -107,6 +118,12 @@ namespace r6_marketplace.Utils
             Dictionary<string, string>? headers = null,
             bool useDefaultHeaders = false)
             => await SendRawRequest(uri, HttpMethod.Post, body, PrepareHeaders(headers, useDefaultHeaders:useDefaultHeaders));
+        public static async Task<HttpResponseMessage> Put(
+            Uri uri,
+            string? body = null,
+            Dictionary<string, string>? headers = null,
+            bool useDefaultHeaders = false)
+            => await SendRawRequest(uri, HttpMethod.Put, body, PrepareHeaders(headers, useDefaultHeaders: useDefaultHeaders));
 
     }
 }

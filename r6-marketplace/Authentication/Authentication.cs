@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using r6_marketplace.Extensions;
+using r6_marketplace.Utils;
 
 namespace r6_marketplace.Authentication
 {
@@ -27,7 +28,7 @@ namespace r6_marketplace.Authentication
                 { "Authorization", $"Basic {credentialsb64}" }
             };
             var response = await Utils.Web.Post(
-                new Uri("https://public-ubiservices.ubi.com/v3/profiles/sessions"),
+                Data.authUri,
                 data,
                 headers,
                 true
