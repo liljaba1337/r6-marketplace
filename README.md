@@ -10,11 +10,11 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 - [x] Authentication flow
 - [x] Retrieve item data by ID
-- [ ] Retrieve item sale history
+- [x] Retrieve item sale history
 - [ ] Search items by name or filters
-- [ ] Retrieve your account details (balance/transaction history)
-- [ ] Manage your listings
-- [ ] Manage your buy requests
+- [ ] Retrieve your account details (balance/orders history)
+- [ ] Manage your sale orders
+- [ ] Manage your buy orders
 
 ---
 
