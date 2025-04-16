@@ -18,6 +18,12 @@ namespace r6_marketplace.Utils.Exceptions
         {
         }
     }
+    internal class HttpRequestException : Exception
+    {
+        public HttpRequestException(string message) : base(message)
+        {
+        }
+    }
     internal class UnsuccessfulStatusCodeException : Exception
     {
         public UnsuccessfulStatusCodeException(string message) : base(message)

@@ -7,14 +7,14 @@ namespace Example
         static async Task Main(string[] args)
         {
             // If you already have your token
-            r6_marketplace.Client client = new r6_marketplace.Client(token:"token");
+            r6_marketplace.R6MarketplaceClient client = new r6_marketplace.R6MarketplaceClient(token:"token");
             
             // If not
-            client = new r6_marketplace.Client();
-            await client.AuthenticateAsync("email", "password");
+            client = new r6_marketplace.R6MarketplaceClient();
+            await client.Authenticate("email", "password");
 
             // Get an item by its ID
-            var item = await client.ItemInfoEndpoints.GetItemAsync("dcde67d3-2bdd-4598-61ac-a0c7d849f2b6",
+            var item = await client.ItemInfoEndpoints.GetItem("dcde67d3-2bdd-4598-61ac-a0c7d849f2b6",
                 r6_marketplace.Utils.Data.Local.en);
 
             if (item == null)

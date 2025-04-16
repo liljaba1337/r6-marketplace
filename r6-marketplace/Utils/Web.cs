@@ -6,15 +6,17 @@ namespace r6_marketplace.Utils
     {
         private const string APP_ID = "80a4a0e8-8797-440f-8f4c-eaba87d0fdda";
         private const string SESSION_ID = "1e08944e-f5da-4ebf-afb3-664091601c4b";
-        private readonly HttpClient client = new HttpClient();
+        private HttpClient client = new HttpClient();
         private string? token;
         internal bool isAuthenticated => token != null;
-        internal Web(string? token = null)
+        internal Web(HttpClient httpClient, string? token = null)
         {
             if (token != null) this.token = token;
+            client = httpClient;
         }
 
         internal void SetToken(string token) => this.token = token;
+        internal void SetHttpClient(HttpClient client) => this.client = client;
 
         internal void EnsureAuthenticated()
         {
@@ -71,7 +73,7 @@ namespace r6_marketplace.Utils
 
             return headers;
         }
-        internal async Task<HttpResponseMessage> GetAsync(
+        internal async Task<HttpResponseMessage> Get(
         Uri uri,
         Dictionary<string, string>? headers = null,
         bool sendAuthToken = true,
@@ -81,7 +83,7 @@ namespace r6_marketplace.Utils
             var finalHeaders = PrepareHeaders(headers, sendAuthToken ? token : null, useDefaultHeaders, local);
             return await SendRawRequest(uri, HttpMethod.Get, null, finalHeaders, this);
         }
-        internal async Task<HttpResponseMessage> PostAsync(
+        internal async Task<HttpResponseMessage> Post(
     Uri uri,
     string? body = null,
     Dictionary<string, string>? headers = null,
@@ -93,17 +95,18 @@ namespace r6_marketplace.Utils
             return await SendRawRequest(uri, HttpMethod.Post, body, finalHeaders, this);
         }
 
-        public static async Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> Get(
             Uri uri,
             Dictionary<string, string>? headers = null,
             bool useDefaultHeaders = false)
             => await SendRawRequest(uri, HttpMethod.Get, null, PrepareHeaders(headers, useDefaultHeaders: useDefaultHeaders));
 
-        public static async Task<HttpResponseMessage> PostAsync(
+        public static async Task<HttpResponseMessage> Post(
             Uri uri,
             string? body = null,
             Dictionary<string, string>? headers = null,
             bool useDefaultHeaders = false)
             => await SendRawRequest(uri, HttpMethod.Post, body, PrepareHeaders(headers, useDefaultHeaders:useDefaultHeaders));
+
     }
 }
