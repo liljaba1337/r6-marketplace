@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using r6_marketplace.Classes.Item.Error;
 
 namespace r6_marketplace.Utils
 {
@@ -22,7 +23,7 @@ namespace r6_marketplace.Utils
         {
             if (!isAuthenticated)
             {
-                throw new InvalidOperationException("Client is not authenticated. " +
+                throw new Exceptions.AuthenticationRequiredException("Client is not authenticated. " +
                     "You must call AuthenticateAsync before using any other methods.");
             }
         }

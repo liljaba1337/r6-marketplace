@@ -7,6 +7,7 @@ namespace r6_marketplace
     public class R6MarketplaceClient
     {
         public readonly ItemInfoEndpoints ItemInfoEndpoints;
+        public readonly SearchEndpoints SearchEndpoints;
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
@@ -40,6 +41,7 @@ namespace r6_marketplace
             web = new Web(httpClient ?? new HttpClient(), token);
 
             ItemInfoEndpoints = new ItemInfoEndpoints(web);
+            SearchEndpoints = new SearchEndpoints(web);
             TokenRefresher = new TokenRefresher(web);
         }
 

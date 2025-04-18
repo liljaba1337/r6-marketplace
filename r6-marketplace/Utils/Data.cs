@@ -22,6 +22,10 @@ namespace r6_marketplace.Utils
             ru,
             tr
         }
+        public enum Weapon
+        {
+
+        }
         public static readonly Uri dataUri = new Uri("https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql");
         public static readonly Uri authUri = new Uri("https://public-ubiservices.ubi.com/v3/profiles/sessions");
         public static string FormatLanguage(Local lang)

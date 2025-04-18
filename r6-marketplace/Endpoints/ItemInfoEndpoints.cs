@@ -28,22 +28,8 @@ namespace r6_marketplace.Endpoints
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri, 
                 RequestBodies.GetItemData.Replace("{ITEMID}", itemId), local:lang);
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new UnsuccessfulStatusCodeException(response.StatusCode.ToString());
-            }
-
-            var json = await response.Content.ReadAsStringAsyncSafe();
-
-            var error = System.Text.Json.JsonSerializer.Deserialize
-                <List<Classes.Item.Error.ApiError>>(json);
-            if (IsNotFoundError(error))
-                return null;
-            if (IsInvalidTokenError(error))
-                throw new InvalidTokenException("The authentication ticket is invalid. Please re-authenticate.");
-
-            var rawitem = System.Text.Json.JsonSerializer.Deserialize
-                <List<Classes.Item.RawData.Root>>(json);
+            
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.Item.RawData.Root>>();
 
             if (rawitem is not { Count: > 0 })
                 return null;
@@ -81,21 +67,10 @@ namespace r6_marketplace.Endpoints
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri,
                 RequestBodies.GetItemPriceHistoryData.Replace("{ITEMID}", itemId));
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new UnsuccessfulStatusCodeException(response.StatusCode.ToString());
-            }
-            var json = await response.Content.ReadAsStringAsyncSafe();
-            var error = System.Text.Json.JsonSerializer.Deserialize
-                <List<Classes.Item.Error.ApiError>>(json);
-            if (IsNotFoundError(error))
-                return null;
-            if (IsInvalidTokenError(error))
-                throw new InvalidTokenException("The authentication ticket is invalid. Please re-authenticate.");
 
-            var rawitem = System.Text.Json.JsonSerializer.Deserialize
-                <List<Classes.ItemPriceHistory.RawData.Root>>(json);
-            if(rawitem is not { Count: > 0 })
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.ItemPriceHistory.RawData.Root>>();
+
+            if (rawitem is not { Count: > 0 })
                 return null;
 
             return new ItemPriceHistory(rawitem[0].data?.game?.marketableItem?.priceHistory?
@@ -107,14 +82,6 @@ namespace r6_marketplace.Endpoints
                     highestPrice = p.highestPrice,
                     itemsCount = p.itemsCount
                 }).ToList() ?? new List<ItemPriceHistoryEntry>());
-        }
-        private static bool IsNotFoundError(List<ApiError>? errors)
-        {
-            return errors?.Any(e => e.errors?.Any(err => err.message.Contains("404")) == true) == true;
-        }
-        private static bool IsInvalidTokenError(List<ApiError>? errors)
-        {
-            return errors?.Any(e => e.errors?.Any(err => err.message.Contains("The authentication ticket is invalid")) == true) == true;
         }
     }
 }

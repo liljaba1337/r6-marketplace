@@ -6,11 +6,8 @@ namespace Example
     {
         static async Task Main(string[] args)
         {
-            // If you already have your token
-            r6_marketplace.R6MarketplaceClient client = new r6_marketplace.R6MarketplaceClient(token:"token");
-            
-            // If not
-            client = new r6_marketplace.R6MarketplaceClient();
+            // Create a client instance and authenticate
+            r6_marketplace.R6MarketplaceClient client = new r6_marketplace.R6MarketplaceClient();
             await client.Authenticate("email", "password");
 
             // Get an item by its ID
