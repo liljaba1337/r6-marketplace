@@ -183,11 +183,16 @@ namespace r6_marketplace.Classes.ItemPriceHistory
         /// The highest daily average price of the item in the past 30 days.
         /// </summary>
         public int AllTimeAverageHigh { get; }
+        /// <summary>
+        /// The lowest daily average price of the item in the past 30 days.
+        /// </summary>
+        public int AllTimeAverageLow { get; }
         public ItemPriceHistory(IEnumerable<ItemPriceHistoryEntry> history)
         {
             _history = new List<ItemPriceHistoryEntry>(history);
             AllTimeHigh = _history.Count > 0 ? _history.Select(x => x.highestPrice).Max() : 0;
             AllTimeAverageHigh = _history.Count > 0 ? _history.Select(x => x.averagePrice).Max() : 0;
+            AllTimeAverageLow = _history.Count > 0 ? _history.Select(x => x.averagePrice).Min() : 0;
         }
         private readonly List<ItemPriceHistoryEntry> _history = new();
         public IReadOnlyList<ItemPriceHistoryEntry> History => _history;
@@ -214,11 +219,11 @@ namespace r6_marketplace.Classes.Item.Error
 {
     internal class ApiError
     {
-        internal List<ErrorDetail> errors { get; set; }
+        public List<ErrorDetail> errors { get; set; }
     }
 
     internal class ErrorDetail
     {
-        internal string message { get; set; }
+        public string message { get; set; }
     }
 }

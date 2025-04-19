@@ -1,4 +1,5 @@
-﻿using r6_marketplace.Classes.Item;
+﻿using System.Text.Json;
+using r6_marketplace.Classes.Item;
 using r6_marketplace.Classes.Item.Error;
 using r6_marketplace.Classes.ItemPriceHistory;
 using r6_marketplace.Extensions;
@@ -27,10 +28,10 @@ namespace r6_marketplace.Endpoints
         {
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri, 
-                RequestBodies.GetItemData.Replace("{ITEMID}", itemId), local:lang);
+                JsonSerializer.Serialize(new Utils.RequestBody.GetItemDetails.Root(itemId).AsList()),
+                local:lang);
             
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.Item.RawData.Root>>();
-
             if (rawitem is not { Count: > 0 })
                 return null;
 
@@ -65,8 +66,7 @@ namespace r6_marketplace.Endpoints
         public async Task<ItemPriceHistory?> GetItemPriceHistory(string itemId)
         {
             web.EnsureAuthenticated();
-            var response = await web.Post(Data.dataUri,
-                RequestBodies.GetItemPriceHistoryData.Replace("{ITEMID}", itemId));
+            var response = await web.Post(Data.dataUri, new Utils.RequestBody.GetItemPriceHistory.Root(itemId).AsJson());
 
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.ItemPriceHistory.RawData.Root>>();
 

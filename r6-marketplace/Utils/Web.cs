@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using r6_marketplace.Classes.Item.Error;
+using r6_marketplace.Extensions;
 
 namespace r6_marketplace.Utils
 {
@@ -51,16 +52,15 @@ namespace r6_marketplace.Utils
             return await client.SendAsync(request);
         }
         private static Dictionary<string, string> PrepareHeaders(
-        Dictionary<string, string>? headers,
-        string? token = null,
-        bool useDefaultHeaders = false,
-        Data.Local? local = null)
+            Dictionary<string, string>? headers,
+            string? token = null,
+            bool useDefaultHeaders = false,
+            Data.Local? local = null)
         {
             headers ??= new Dictionary<string, string>();
-
-            if (local != null)
+            if (local is Data.Local _local)
             {
-                headers["Ubi-Localecode"] = Data.FormatLanguage(local.Value);
+                headers["Ubi-Localecode"] = _local.Format();
             }
 
             if (token != null)

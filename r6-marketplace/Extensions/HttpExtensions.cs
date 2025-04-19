@@ -6,16 +6,17 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using r6_marketplace.Classes.Item.Error;
 using r6_marketplace.Utils.Exceptions;
+using static r6_marketplace.Utils.Data;
 
 namespace r6_marketplace.Extensions
 {
     public static class HttpExtensions
     {
-        public static async Task<string> ReadAsStringAsyncSafe(this HttpContent content)
+        internal static async Task<string> ReadAsStringAsyncSafe(this HttpContent content)
         {
             return await content.ReadAsStringAsync().ConfigureAwait(false);
         }
-        public static async Task<T?> DeserializeAsyncSafe<T>(this HttpResponseMessage response,
+        internal static async Task<T?> DeserializeAsyncSafe<T>(this HttpResponseMessage response,
             bool checkFor404 = true, bool checkForStatusCode = true)
         {
             if (checkForStatusCode && !response.IsSuccessStatusCode)
@@ -33,5 +34,20 @@ namespace r6_marketplace.Extensions
             => errors?.Any(e => e.errors?.Any(err => err.message.Contains("404")) == true) == true;
         private static bool IsInvalidTokenError(List<ApiError>? errors)
             => errors?.Any(e => e.errors?.Any(err => err.message.Contains("The authentication ticket is invalid")) == true) == true;
+        public static string Format(this r6_marketplace.Utils.Data.Local lang)
+        {
+            return lang switch
+            {
+                Local.de => "de-DE",
+                Local.en => "en-US",
+                Local.es => "es-ES",
+                Local.fr => "fr-FR",
+                Local.it => "it-IT",
+                Local.pl => "pl-PL",
+                Local.ru => "ru-RU",
+                Local.tr => "tr-TR",
+                _ => throw new ArgumentOutOfRangeException(nameof(lang), lang, null)
+            };
+        }
     }
 }
