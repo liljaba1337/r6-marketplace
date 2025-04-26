@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using r6_marketplace.Utils.RequestBody.Shared;
+using r6_marketplace.RequestBodies.Shared;
 
-namespace r6_marketplace.Utils.RequestBody.GetItemPriceHistory
+namespace r6_marketplace.RequestBodies.GetItemPriceHistory
 {
     internal class Root : RequestRoot<Variables>
     {

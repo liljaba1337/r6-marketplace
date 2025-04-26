@@ -38,13 +38,13 @@ namespace r6_marketplace.Endpoints
         }
 
         /// <summary>
-        /// Returnsa list of all the search tags you can use in <see cref="SearchItem"/>.
+        /// Returns a list of all the search tags you can use in <see cref="SearchItem"/>.
         /// </summary>
         /// <returns>An instance of <see cref="Classes.Tags.Tags"/>.</returns>
         public async Task<Classes.Tags.Tags> GetSearchTags()
         {
             web.EnsureAuthenticated();
-            var response = await web.Post(Data.dataUri);
+            var response = await web.Post(Data.dataUri, new RequestBodies.GetSearchTags.Root().AsJson());
 
             var json = await response.DeserializeAsyncSafe<List<Classes.Tags.RawData.Root>>(false);
             var tagGroups = json?[0].data.game.marketplace.tagGroups;
@@ -63,21 +63,17 @@ namespace r6_marketplace.Endpoints
             return tags;
         }
 
-        public async Task<object> SearchItem(string? name = default, List<string>? tags = default,
+        public async Task<object> SearchItem(string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
             int limit = 40, int offset = 0)
         {
             if (limit < 0 || offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(limit), "Limit and offset cannot be negative.");
             web.EnsureAuthenticated();
-            //string body = RequestBodies.SearchData
-            //    .Replace("{NAME}", name + '*' ?? "")
-            //    .Replace("{TAGS}", tags != null ? '"' + string.Join("\",\"", tags) + '"' : "")
-            //    .Replace("{SORTBY}", sortBy.Format())
-            //    .Replace("{ORDERTYPE}", sortBy)
-            //    .Replace("{DIRECTION}", sortDirection.ToString())
-            //    .Replace("{LIMIT}", limit.ToString())
-            //    .Replace("{OFFSET}", offset.ToString());
+
+            var body = new RequestBodies.SearchItems.Root(
+                name ?? "", limit, offset, types ?? new List<string>(), tags ?? new List<string>(), sortBy, sortDirection);
+
 
             return null;
         }

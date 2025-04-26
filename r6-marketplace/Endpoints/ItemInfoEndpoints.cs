@@ -28,7 +28,7 @@ namespace r6_marketplace.Endpoints
         {
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri, 
-                JsonSerializer.Serialize(new Utils.RequestBody.GetItemDetails.Root(itemId).AsList()),
+                JsonSerializer.Serialize(new RequestBodies.GetItemDetails.Root(itemId).AsList()),
                 local:lang);
             
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.Item.RawData.Root>>();
@@ -66,7 +66,7 @@ namespace r6_marketplace.Endpoints
         public async Task<ItemPriceHistory?> GetItemPriceHistory(string itemId)
         {
             web.EnsureAuthenticated();
-            var response = await web.Post(Data.dataUri, new Utils.RequestBody.GetItemPriceHistory.Root(itemId).AsJson());
+            var response = await web.Post(Data.dataUri, new RequestBodies.GetItemPriceHistory.Root(itemId).AsJson());
 
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.ItemPriceHistory.RawData.Root>>();
 
