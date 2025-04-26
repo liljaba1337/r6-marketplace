@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using r6_marketplace.Utils.RequestBody.Shared;
-
-namespace r6_marketplace.Utils.RequestBody
+﻿namespace r6_marketplace.Utils.RequestBody
 {
-    file class RequestQueries
+    internal class RequestQueries
     {
         internal const string GetItemData =
             "query GetItemDetails($spaceId: String!, $itemId: String!, $tradeId: String!, $fetchTrade: Boolean!) {  game(spaceId: $spaceId) {    id    marketableItem(itemId: $itemId) { id item {   ...SecondaryStoreItemFragment   ...SecondaryStoreItemOwnershipFragment   __typename } marketData {   ...MarketDataFragment   __typename } paymentLimitations {   id   paymentItemId   minPrice   maxPrice   __typename } __typename    }    viewer { meta {   id   trades(filterBy: {states: [Created], itemIds: [$itemId]}) {     nodes {  ...TradeFragment  __typename     }     __typename   }   trade(tradeId: $tradeId) @include(if: $fetchTrade) {     ...TradeFragment     __typename   }   __typename } __typename    }    __typename  }}fragment SecondaryStoreItemFragment on SecondaryStoreItem {  id  assetUrl  itemId  name  tags  type  __typename}fragment SecondaryStoreItemOwnershipFragment on SecondaryStoreItem {  id  viewer {    meta { id isOwned quantity __typename    }    __typename  }  __typename}fragment MarketDataFragment on MarketableItemMarketData {  id  sellStats {    id    paymentItemId    lowestPrice    highestPrice    activeCount    __typename  }  buyStats {    id    paymentItemId    lowestPrice    highestPrice    activeCount    __typename  }  lastSoldAt {    id    paymentItemId    price    performedAt    __typename  }  __typename}fragment TradeFragment on Trade {  id  tradeId  state  category  createdAt  expiresAt  lastModifiedAt  failures  tradeItems {    id    item { ...SecondaryStoreItemFragment ...SecondaryStoreItemOwnershipFragment __typename    }    __typename  }  payment {    id    item { ...SecondaryStoreItemQuantityFragment __typename    }    price    transactionFee    __typename  }  paymentOptions {    id    item { ...SecondaryStoreItemQuantityFragment __typename    }    price    transactionFee    __typename  }  paymentProposal {    id    item { ...SecondaryStoreItemQuantityFragment __typename    }    price    __typename  }  viewer {    meta { id tradesLimitations {   ...TradesLimitationsFragment   __typename } __typename    }    __typename  }  __typename}fragment SecondaryStoreItemQuantityFragment on SecondaryStoreItem {  id  viewer {    meta { id quantity __typename    }    __typename  }  __typename}fragment TradesLimitationsFragment on UserGameTradesLimitations {  id  buy {    id    resolvedTransactionCount    resolvedTransactionPeriodInMinutes    activeTransactionCount    __typename  }  sell {    id    resolvedTransactionCount    resolvedTransactionPeriodInMinutes    activeTransactionCount    resaleLocks { id itemId expiresAt __typename    }    __typename  }  __typename}";
@@ -40,50 +33,5 @@ namespace r6_marketplace.Utils.RequestBody.Shared
     internal abstract class BaseVariables
     {
         public string spaceId { get; } = "0d2ae42d-4c27-4cb7-af6c-2099062302bb";
-    }
-}
-
-namespace r6_marketplace.Utils.RequestBody.GetItemPriceHistory
-{
-    internal class Root : RequestRoot<Variables>
-    {
-        public Root(string itemId) : base(new Variables(itemId)) { }
-
-        public override string operationName => "GetItemPriceHistory";
-        public override string query => RequestQueries.GetItemPriceHistoryData;
-    }
-
-    internal class Variables : BaseVariables
-    {
-        public Variables(string itemId)
-        {
-            this.itemId = itemId;
-        }
-
-        public string itemId { get; }
-        public string paymentItemId { get; } = "9ef71262-515b-46e8-b9a8-b6b6ad456c67";
-    }
-}
-
-namespace r6_marketplace.Utils.RequestBody.GetItemDetails
-{
-    internal class Root : RequestRoot<Variables>
-    {
-        public Root(string itemId) : base(new Variables(itemId)) { }
-
-        public override string operationName => "GetItemDetails";
-        public override string query => RequestQueries.GetItemData;
-    }
-
-    internal class Variables : BaseVariables
-    {
-        public Variables(string itemId)
-        {
-            this.itemId = itemId;
-        }
-
-        public string itemId { get; }
-        public string tradeId { get; } = "";
-        public bool fetchTrade { get; } = false;
     }
 }

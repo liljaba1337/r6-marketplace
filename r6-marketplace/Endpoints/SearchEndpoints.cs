@@ -17,7 +17,6 @@ namespace r6_marketplace.Endpoints
         {
             this.web = web;
         }
-
         public enum SortBy
         {
             PurchaseAvailaible,
@@ -39,7 +38,7 @@ namespace r6_marketplace.Endpoints
         }
 
         /// <summary>
-        /// Gets all the search tags you can use in <see cref="SearchItem"/>.
+        /// Returnsa list of all the search tags you can use in <see cref="SearchItem"/>.
         /// </summary>
         /// <returns>An instance of <see cref="Classes.Tags.Tags"/>.</returns>
         public async Task<Classes.Tags.Tags> GetSearchTags()
@@ -68,6 +67,8 @@ namespace r6_marketplace.Endpoints
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
             int limit = 40, int offset = 0)
         {
+            if (limit < 0 || offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(limit), "Limit and offset cannot be negative.");
             web.EnsureAuthenticated();
             //string body = RequestBodies.SearchData
             //    .Replace("{NAME}", name + '*' ?? "")
