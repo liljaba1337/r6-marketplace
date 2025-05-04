@@ -116,6 +116,16 @@ namespace r6_marketplace.Classes.Item.RawData
 // simplified
 namespace r6_marketplace.Classes.Item
 {
+    /// <summary>
+    /// A normal <see cref="Item"/> class, but with a method to create a buy order.
+    /// </summary>
+    public class SearchItem : Item
+    {
+        public Task<object> CreateBuyOrder(int price)
+        {
+            return null;
+        }
+    }
     public class Item
     {
         public string ID { get; internal set; }
