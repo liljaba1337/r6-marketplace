@@ -29,11 +29,11 @@ namespace r6_marketplace.RequestBodies.SearchItems
             this.limit = limit;
             this.offset = offset;
             filterBy = new(types, tags, text);
-            this.sortBy = new(sortBy.Format(), sortDirection.ToString());
+            this.sortBy = new(sortBy.Format(), sortDirection.ToString(), sortBy.GetOrderType());
         }
 
-        int limit { get; }
-        int offset { get; }
+        public int limit { get; }
+        public int offset { get; }
         public bool withOwnership { get; } = true;
         public SortBy sortBy { get; }
         public FilterBy filterBy { get; }
@@ -41,14 +41,18 @@ namespace r6_marketplace.RequestBodies.SearchItems
 
     internal class SortBy
     {
-        public SortBy(string field, string direction = "ASC")
+        public SortBy(string field, string direction, string? orderType)
         {
+            this.orderType = orderType;
             this.field = field;
             this.direction = direction;
         }
 
         public string field { get; }
         public string direction { get; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? orderType { get; }
         public string paymentItemId { get; } = "9ef71262-515b-46e8-b9a8-b6b6ad456c67";
     }
     internal class FilterBy

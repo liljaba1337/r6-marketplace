@@ -39,8 +39,11 @@ namespace r6_marketplace.Endpoints
             var buyStats = rawitem[0].data.game.marketableItem.marketData.buyStats;
             return new Item
             {
+                ID = rawitem[0].data.game.marketableItem.item.itemId,
                 Name = rawitem[0].data.game.marketableItem.item.name,
-                assetUrl = rawitem[0].data.game.marketableItem.item.assetUrl,
+                AssetUrl = rawitem[0].data.game.marketableItem.item.assetUrl,
+                Type = rawitem[0].data.game.marketableItem.item.type,
+                Tags = rawitem[0].data.game.marketableItem.item.tags,
                 BuyOrdersStats = buyStats != null ? new OrdersStats()
                 {
                     lowestPrice = buyStats[0].lowestPrice,

@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CS8618
 
 using System.Collections;
+using r6_marketplace.Extensions;
 
 namespace r6_marketplace.Classes.Item.RawData
 {
@@ -117,10 +118,26 @@ namespace r6_marketplace.Classes.Item
 {
     public class Item
     {
+        public string ID { get; internal set; }
         public string Name { get; internal set; }
-        public string assetUrl { get; internal set; }
+        public string AssetUrl { get; internal set; }
+        public string Type { get; internal set; }
+        /// <summary>
+        /// Weapon name is usually at index 0, release year/season at index 3, and rarity at index 5.
+        /// I'm not sure about the consistency of this yet, so I don't extract them myself.
+        /// I will probably change it in the future.
+        /// </summary>
+        public List<string> Tags { get; internal set; }
         public OrdersStats? SellOrdersStats { get; internal set; }
         public OrdersStats? BuyOrdersStats { get; internal set; }
+        /// <summary>
+        /// Get a link to the item on the Ubisoft marketplace.
+        /// </summary>
+        public string GetMarketplaceURL(Utils.Data.Local lang = Utils.Data.Local.en)
+        {
+            return $"https://www.ubisoft.com/{lang.Format()}/game/rainbow-six/siege/marketplace" +
+                $"?route=sell%2Fitem-details&itemId={ID}";
+        }
     }
     public class OrdersStats
     {
@@ -129,7 +146,6 @@ namespace r6_marketplace.Classes.Item
         public int activeCount { get; internal set; }
     }
 }
-
 namespace r6_marketplace.Classes.ItemPriceHistory.RawData
 {
     internal class Data

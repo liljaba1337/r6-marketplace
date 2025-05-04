@@ -20,5 +20,14 @@ namespace r6_marketplace.Extensions
                 _ => throw new ArgumentOutOfRangeException(nameof(sortBy), sortBy, null)
             };
         }
+        internal static string? GetOrderType(this SortBy sortBy)
+        {
+            return sortBy switch
+            {
+                SortBy.PurchaseAvailaible => "Buy",
+                SortBy.SaleAvailaible => "Sell",
+                _ => null
+            };
+        }
     }
 }

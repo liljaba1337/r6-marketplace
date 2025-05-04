@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
 using r6_marketplace.Utils.Exceptions;
@@ -63,7 +64,7 @@ namespace r6_marketplace.Endpoints
             return tags;
         }
 
-        public async Task<object> SearchItem(string? name = default, List<string>? types = default, List<string>? tags = default,
+        public async Task<List<Item>> SearchItem(string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
             int limit = 40, int offset = 0)
         {
@@ -73,9 +74,31 @@ namespace r6_marketplace.Endpoints
 
             var body = new RequestBodies.SearchItems.Root(
                 name ?? "", limit, offset, types ?? new List<string>(), tags ?? new List<string>(), sortBy, sortDirection);
+            var response = await web.Post(Data.dataUri, body.AsJson());
+            var json = await response.DeserializeAsyncSafe<List<Classes.SearchResponse.RawData.Root>>(false);
+            if(json == null || json[0].data.game.marketableItems.nodes.Count == 0)
+                return new List<Item>();
 
-
-            return null;
+            return json[0].data.game.marketableItems.nodes.Select(x => new Item
+            {
+                ID = x.item.itemId,
+                Name = x.item.name,
+                AssetUrl = x.item.assetUrl,
+                Type = x.item.type,
+                Tags = x.item.tags,
+                BuyOrdersStats = x.marketData.buyStats != null ? new OrdersStats()
+                {
+                    lowestPrice = x.marketData.buyStats[0].lowestPrice,
+                    highestPrice = x.marketData.buyStats[0].highestPrice,
+                    activeCount = x.marketData.buyStats[0].activeCount
+                } : null,
+                SellOrdersStats = x.marketData.sellStats != null ? new OrdersStats()
+                {
+                    lowestPrice = x.marketData.sellStats[0].lowestPrice,
+                    highestPrice = x.marketData.sellStats[0].highestPrice,
+                    activeCount = x.marketData.sellStats[0].activeCount
+                } : null
+            }).ToList();
         }
     }
 }
