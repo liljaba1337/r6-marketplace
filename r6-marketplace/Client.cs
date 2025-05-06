@@ -8,6 +8,7 @@ namespace r6_marketplace
     {
         public readonly ItemInfoEndpoints ItemInfoEndpoints;
         public readonly SearchEndpoints SearchEndpoints;
+        public readonly AccountEndpoints AccountEndpoints;
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
@@ -43,6 +44,7 @@ namespace r6_marketplace
             ItemInfoEndpoints = new ItemInfoEndpoints(web);
             SearchEndpoints = new SearchEndpoints(web);
             TokenRefresher = new TokenRefresher(web);
+            AccountEndpoints = new AccountEndpoints(web);
         }
 
         /// <summary>
@@ -50,7 +52,8 @@ namespace r6_marketplace
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
-        /// <returns>Your access token.</returns>
+        /// <returns>Your access token.
+        /// It's used internally, but is returned in case you want to save it somewhere.</returns>
         public async Task<string> Authenticate(string email, string password)
         {
             r6_marketplace.Classes.AuthenticationResponse response =

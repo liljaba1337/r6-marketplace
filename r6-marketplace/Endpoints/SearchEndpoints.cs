@@ -11,13 +11,9 @@ using r6_marketplace.Utils.Exceptions;
 
 namespace r6_marketplace.Endpoints
 {
-    public class SearchEndpoints
+    public class SearchEndpoints : EndpointsBase
     {
-        private Web web;
-        internal SearchEndpoints(Web web)
-        {
-            this.web = web;
-        }
+        internal SearchEndpoints(Web web) : base(web) { }
         public enum SortBy
         {
             PurchaseAvailaible,

@@ -7,14 +7,10 @@ using r6_marketplace.Utils;
 
 namespace r6_marketplace.Endpoints
 {
-    public class TransactionsEndpoints
+    public class TransactionsEndpoints : EndpointsBase
     {
-        private Web web;
-        internal TransactionsEndpoints(Web web)
-        {
-            this.web = web;
-        }
-        public async Task<object> OrdersHistory(int limit = 40, int offset = 0, Data.Local local = Data.Local.en)
+        internal TransactionsEndpoints(Web web) : base(web) { }
+        public async Task<object> GetActiveOrders(Data.Local local = Data.Local.en)
         {
             web.EnsureAuthenticated();
 

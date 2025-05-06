@@ -146,7 +146,7 @@ namespace r6_marketplace.Classes.Item
         public string GetMarketplaceURL(Utils.Data.Local lang = Utils.Data.Local.en)
         {
             return $"https://www.ubisoft.com/{lang.Format()}/game/rainbow-six/siege/marketplace" +
-                $"?route=sell%2Fitem-details&itemId={ID}";
+                $"?route=buy%2Fitem-details&itemId={ID}";
         }
     }
     public class OrdersStats

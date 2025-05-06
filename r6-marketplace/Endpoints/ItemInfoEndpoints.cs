@@ -8,13 +8,9 @@ using r6_marketplace.Utils.Exceptions;
 
 namespace r6_marketplace.Endpoints
 {
-    public class ItemInfoEndpoints
+    public class ItemInfoEndpoints : EndpointsBase
     {
-        private Web web;
-        internal ItemInfoEndpoints(Web web)
-        {
-            this.web = web;
-        }
+        internal ItemInfoEndpoints(Web web) : base(web) { }
 
         /// <summary>
         /// Get item info by its ID.
