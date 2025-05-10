@@ -65,11 +65,11 @@ namespace r6_marketplace.Endpoints
         /// <param name="sortDirection">The direction of sorting.</param>
         /// <param name="limit">The maximum number of items to return. Must be non-negative. Ubisoft typically uses 40.</param>
         /// <param name="offset">The number of items to skip before returning results. Must be non-negative.</param>
-        /// <returns>A list of matching <see cref="Item"/> objects.</returns>
+        /// <returns>A read-only list of matching <see cref="Item"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
         /// </exception>
-        public async Task<List<SearchItem>> SearchItem(
+        public async Task<IReadOnlyList<SearchItem>> SearchItem(
             string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
             int limit = 40, int offset = 0

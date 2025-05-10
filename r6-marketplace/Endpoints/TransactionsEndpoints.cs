@@ -14,14 +14,15 @@ namespace r6_marketplace.Endpoints
         internal TransactionsEndpoints(Web web) : base(web) { }
 
         /// <summary>
-        /// Get the active buy/sell orders.
+        /// Get active buy/sell orders.
         /// </summary>
         /// <param name="local">Language to retrieve items' metadata in.</param>
         /// <param name="limit">I don't really understand why it's here, as you can't have more than 10 active orders at a time anyway.
         /// But Ubisoft API requires this parameter, so I thought it might be useful to include it here. Must be non-negative.</param>
         /// <param name="offset">The number of orders to skip before returning results. Must be non-negative.</param>
-        /// <returns></returns>
-        public async Task<List<Classes.GetActiveOrders.Simplified.Order>?>
+        /// <returns>A read-only list of <see cref="Classes.GetActiveOrders.Simplified.Order"/> instances (may be empty if there are no orders)
+        /// or null if an error occured</returns>
+        public async Task<IReadOnlyList<Classes.GetActiveOrders.Simplified.Order>?>
             GetActiveOrders(Data.Local local = Data.Local.en, int limit = 40, int offset = 0)
         {
             web.EnsureAuthenticated();

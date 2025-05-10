@@ -233,13 +233,13 @@ namespace r6_marketplace.Classes.ItemPriceHistory
     /// <summary>
     /// Represents a single entry (day) in the item price history.
     /// </summary>
-    public class ItemPriceHistoryEntry
+    public readonly struct ItemPriceHistoryEntry
     {
-        public DateTime date { get; internal set; }
-        public int lowestPrice { get; internal set; }
-        public int averagePrice { get; internal set; }
-        public int highestPrice { get; internal set; }
-        public int itemsCount { get; internal set; }
+        public DateTime date { get; init; }
+        public int lowestPrice { get; init; }
+        public int averagePrice { get; init; }
+        public int highestPrice { get; init; }
+        public int itemsCount { get; init; }
     }
 }
 
