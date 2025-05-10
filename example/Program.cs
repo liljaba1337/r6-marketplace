@@ -17,6 +17,7 @@ namespace Example
             // Get an item's price history by its ID
             var pricehistory = await client.ItemInfoEndpoints.GetItemPriceHistory("dcde67d3-2bdd-4598-61ac-a0c7d849f2b6");
 
+            // Print item details. This is applicable for almost any return type.
             if (item == null || pricehistory == null)
                 Console.WriteLine("Not found");
             else
@@ -28,7 +29,7 @@ namespace Example
                 Console.WriteLine(item.SellOrdersStats?.activeCount);
 
                 // Picture of it
-                Console.WriteLine(item.assetUrl);
+                Console.WriteLine(item.AssetUrl);
 
                 // Price history
                 Console.WriteLine($"30 days high: {pricehistory.AllTimeHigh}");
@@ -38,6 +39,20 @@ namespace Example
                     Console.WriteLine($"Average price: {itemPrice.averagePrice} - Date: {itemPrice.date}");
                 }
             }
+
+            // Get search tags (temporary)
+            var tags = await client.SearchEndpoints.GetSearchTags();
+
+            // Search items
+            var items = await client.SearchEndpoints.SearchItem(
+                name: "Black Ice",
+                types: new List<string> { "WeaponSkin" },
+                tags: new List<string> { "C8-SFW" },
+                sortBy: r6_marketplace.Endpoints.SearchEndpoints.SortBy.LastSalePrice,
+                sortDirection: r6_marketplace.Endpoints.SearchEndpoints.SortDirection.ASC,
+                limit: 40,
+                offset: 0
+            );
         }
     }
 }

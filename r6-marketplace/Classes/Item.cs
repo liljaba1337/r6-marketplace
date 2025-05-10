@@ -128,6 +128,8 @@ namespace r6_marketplace.Classes.Item
     }
     public class Item
     {
+        /// <returns>The name of the item.</returns>
+        public override string ToString() => Name;
         public string ID { get; internal set; }
         public string Name { get; internal set; }
         public string AssetUrl { get; internal set; }

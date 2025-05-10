@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using r6_marketplace.Classes.Item;
+﻿using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
-using r6_marketplace.Utils.Exceptions;
 
 namespace r6_marketplace.Endpoints
 {
@@ -67,7 +60,7 @@ namespace r6_marketplace.Endpoints
         /// </summary>
         /// <param name="name">The name of the item to search for.</param>
         /// <param name="types">A list of item TYPES (e.g. WeaponSkin or DroneSkin). Available types can be retrieved using <see cref="GetSearchTags"/> from the <see cref="r6_marketplace.Classes.Tags.Tags.Type"/> property.</param>
-        /// <param name="tags">A list of item TAGS. This is basically everything else from the response of <see cref="GetSearchTags"/> EXCEPT types</param>
+        /// <param name="tags">A list of item TAGS. This is basically everything else from the response of <see cref="GetSearchTags"/> EXCEPT types.</param>
         /// <param name="sortBy">The method of sorting.</param>
         /// <param name="sortDirection">The direction of sorting.</param>
         /// <param name="limit">The maximum number of items to return. Must be non-negative. Ubisoft typically uses 40.</param>
@@ -76,9 +69,11 @@ namespace r6_marketplace.Endpoints
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
         /// </exception>
-        public async Task<List<SearchItem>> SearchItem(string? name = default, List<string>? types = default, List<string>? tags = default,
+        public async Task<List<SearchItem>> SearchItem(
+            string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
-            int limit = 40, int offset = 0)
+            int limit = 40, int offset = 0
+            )
         {
             if (limit < 0 || offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(limit), "Limit and offset cannot be negative.");
