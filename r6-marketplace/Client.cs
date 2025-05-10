@@ -9,6 +9,7 @@ namespace r6_marketplace
         public readonly ItemInfoEndpoints ItemInfoEndpoints;
         public readonly SearchEndpoints SearchEndpoints;
         public readonly AccountEndpoints AccountEndpoints;
+        public readonly TransactionsEndpoints TransactionsEndpoints;
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
@@ -34,8 +35,8 @@ namespace r6_marketplace
         /// <summary>
         /// Create a new instance of the R6MarketplaceClient.
         /// </summary>
-        /// <param name="token">Your Ubisoft account token
-        /// in case you already have it. Mostly used for testing purposes, so as not to reauthenticate many times.</param>
+        /// <param name="token">Your Ubisoft account token beginning with "Ubi_v1 t=".
+        /// Mostly used for testing purposes, so as not to reauthenticate many times.</param>
         /// <param name="httpClient">An <see cref="HttpClient"/> instance if you wish to use a custom one</param>
         public R6MarketplaceClient(HttpClient? httpClient = null, string? token = null)
         {
@@ -45,6 +46,7 @@ namespace r6_marketplace
             SearchEndpoints = new SearchEndpoints(web);
             TokenRefresher = new TokenRefresher(web);
             AccountEndpoints = new AccountEndpoints(web);
+            TransactionsEndpoints = new TransactionsEndpoints(web);
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace r6_marketplace.Endpoints
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri, new RequestBodies.GetBalance.Root().AsJson());
             var rawBalance = await response.DeserializeAsyncSafe<List<Classes.BalanceResponse.Root>>();
-            return rawBalance?[0]?.data?.game?.viewer?.meta?.quantity ?? -1;
+            return rawBalance?[0]?.data?.game?.viewer?.meta?.secondaryStoreItem?.meta?.quantity ?? -1;
         }
     }
 }

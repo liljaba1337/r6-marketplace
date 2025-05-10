@@ -22,6 +22,11 @@ namespace r6_marketplace.Utils
             ru,
             tr
         }
+        public enum OrderType
+        {
+            Buy,
+            Sell
+        }
         public static readonly Uri dataUri = new Uri("https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql");
         public static readonly Uri authUri = new Uri("https://public-ubiservices.ubi.com/v3/profiles/sessions");
     }
