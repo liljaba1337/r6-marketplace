@@ -57,3 +57,20 @@ namespace r6_marketplace.RequestBodies.AccountOrders.Sell
         public string paymentItemId { get; } = "9ef71262-515b-46e8-b9a8-b6b6ad456c67";
     }
 }
+namespace r6_marketplace.RequestBodies.AccountOrders.Cancel
+{
+    internal class Root : RequestRoot<Variables>
+    {
+        public Root(string id) : base(new Variables(id)) { }
+        public override string operationName => "CancelOrderMutation";
+        public override string query => RequestQueries.CancelOrderData;
+    }
+    internal class Variables : BaseVariables
+    {
+        public Variables(string id)
+        {
+            this.tradeId = id;
+        }
+        public string tradeId { get; }
+    }
+}

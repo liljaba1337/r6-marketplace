@@ -39,7 +39,7 @@ namespace r6_marketplace.Endpoints
             if (rawitem is not { Count: > 0 })
                 return null;
 
-            return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.Orders.Order()
+            return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.Orders.Order(this)
             {
                 ID = x.tradeId,
                 OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
@@ -81,7 +81,7 @@ namespace r6_marketplace.Endpoints
             if (x == null)
                 throw new Exception("An error occurred. The item doesn't exist or you don't have access to the marketplace.");
 
-            return new Classes.Orders.Order()
+            return new Classes.Orders.Order(this)
             {
                 ID = x.tradeId,
                 OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
@@ -102,14 +102,15 @@ namespace r6_marketplace.Endpoints
             };
         }
         /// <summary>
-        /// Create a sell order for an item.
+        /// Cancel an order.
         /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="price">The price you want to sell this item for. Must be between 10 and 1000000.</param>
-        /// <returns>An instance of <see cref="Classes.Orders.Order"/> if the order was places successfully.</returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="Exception"></exception>
-        public async Task<Classes.Orders.Order> CreateSellOrder(SellableItem item, int price)
-            => await CreateSellOrder(item.ID, price);
+        /// <param name="orderId">The ID of an order to cancel.</param>
+        /// <returns>For some reason, API always returns an error even if the order was cancelled successfully.
+        /// So right now there is no way to tell if an order was cancelled or not, except retrieving active orders again.</returns>
+        public async Task CancelOrder(string orderId)
+        {
+            web.EnsureAuthenticated();
+            await web.Post(Data.dataUri, new RequestBodies.AccountOrders.Cancel.Root(orderId).AsJson());
+        }
     }
 }

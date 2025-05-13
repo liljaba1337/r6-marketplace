@@ -14,7 +14,7 @@ namespace r6_marketplace.Classes.Item
     /// </summary>
     public class SellableItem : Item
     {
-        internal readonly TransactionsEndpoints transactionsEndpoints;
+        private readonly TransactionsEndpoints transactionsEndpoints;
         internal SellableItem(TransactionsEndpoints transactionsEndpoints) { this.transactionsEndpoints = transactionsEndpoints; }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using r6_marketplace.Classes.Item;
+using r6_marketplace.Endpoints;
 using r6_marketplace.Utils;
 
 namespace r6_marketplace.Classes.Orders.Raw
@@ -154,6 +155,8 @@ namespace r6_marketplace.Classes.Orders
     // Might be a good idea to split this into BuyOrder and SellOrder later.
     public class Order
     {
+        private readonly TransactionsEndpoints transactionsEndpoints;
+        internal Order(TransactionsEndpoints transactionsEndpoints) { this.transactionsEndpoints = transactionsEndpoints; }
         public string ID { get; internal set; }
         public Data.OrderType OrderType { get; internal set; }
         public DateTime CreatedAt { get; internal set; }
@@ -169,5 +172,13 @@ namespace r6_marketplace.Classes.Orders
         /// The amount you will receive after selling this item. For purchase orders this is always 0.
         /// </summary>
         public int NetAmount { get; internal set; }
+        /// <summary>
+        /// Cancel this order.
+        /// </summary>
+        /// <param name="orderId">The ID of an order to cancel.</param>
+        /// <returns>For some reason, API always returns an error even if the order was cancelled successfully.
+        /// So right now there is no way to tell if an order was cancelled or not, except retrieving active orders again.</returns>
+        public async Task Cancel()
+            => await transactionsEndpoints.CancelOrder(ID);
     }
 }
