@@ -63,13 +63,13 @@ namespace r6_marketplace.Endpoints
         /// <param name="tags">A list of item TAGS. This is basically everything else from the response of <see cref="GetSearchTags"/> EXCEPT types.</param>
         /// <param name="sortBy">The method of sorting.</param>
         /// <param name="sortDirection">The direction of sorting.</param>
-        /// <param name="limit">The maximum number of items to return. Must be non-negative. Ubisoft typically uses 40.</param>
+        /// <param name="limit">The maximum number of items to return. Must be between 0 and 500.</param>
         /// <param name="offset">The number of items to skip before returning results. Must be non-negative.</param>
         /// <returns>A read-only list of matching <see cref="Item"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
         /// </exception>
-        public async Task<IReadOnlyList<SearchItem>> SearchItem(
+        public async Task<IReadOnlyList<PurchasableItem>> SearchItem(
             string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
             int limit = 40, int offset = 0
@@ -77,6 +77,9 @@ namespace r6_marketplace.Endpoints
         {
             if (limit < 0 || offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(limit), "Limit and offset cannot be negative.");
+            if (limit > 500)
+                throw new ArgumentOutOfRangeException(nameof(limit), "Limit cannot be greater than 500.");
+
             web.EnsureAuthenticated();
 
             var body = new RequestBodies.SearchItems.Root(
@@ -84,15 +87,17 @@ namespace r6_marketplace.Endpoints
             var response = await web.Post(Data.dataUri, body.AsJson());
             var json = await response.DeserializeAsyncSafe<List<Classes.SearchResponse.RawData.Root>>(false);
             if(json == null || json[0].data.game.marketableItems.nodes.Count == 0)
-                return new List<SearchItem>();
+                return new List<PurchasableItem>();
 
-            return json[0].data.game.marketableItems.nodes.Select(x => new SearchItem
+            return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem
             {
                 ID = x.item.itemId,
                 Name = x.item.name,
                 AssetUrl = x.item.assetUrl,
                 Type = x.item.type,
                 Tags = x.item.tags,
+                LastSoldAtPrice = x.marketData.lastSoldAt[0].price,
+                LastSoldAtTime = x.marketData.lastSoldAt[0].performedAt,
                 BuyOrdersStats = x.marketData.buyStats != null ? new OrdersStats()
                 {
                     lowestPrice = x.marketData.buyStats[0].lowestPrice,

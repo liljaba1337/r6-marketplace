@@ -13,6 +13,7 @@ namespace r6_marketplace
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
+        [Obsolete("This event is not ready yet and should not be used.", true)]
         public event TokenRefreshedEventHandler? TokenRefreshed
         {
             add => TokenRefresher.TokenRefreshed += value;

@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 using r6_marketplace.Classes.Item;
-using r6_marketplace.Classes.Item.Error;
-using r6_marketplace.Classes.ItemPriceHistory;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
 using r6_marketplace.Utils.Exceptions;
@@ -67,7 +65,7 @@ namespace r6_marketplace.Endpoints
             web.EnsureAuthenticated();
             var response = await web.Post(Data.dataUri, new RequestBodies.GetItemPriceHistory.Root(itemId).AsJson());
 
-            var rawitem = await response.DeserializeAsyncSafe<List<Classes.ItemPriceHistory.RawData.Root>>();
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.Item.PriceHistoryRaw.Root>>();
 
             if (rawitem is not { Count: > 0 })
                 return null;
@@ -75,11 +73,11 @@ namespace r6_marketplace.Endpoints
             return new ItemPriceHistory(rawitem[0].data?.game?.marketableItem?.priceHistory?
                 .Select(p => new ItemPriceHistoryEntry
                 {
-                    date = DateTime.TryParse(p.date, out var parsedDate) ? parsedDate : DateTime.MinValue,
-                    lowestPrice = p.lowestPrice,
-                    averagePrice = p.averagePrice,
-                    highestPrice = p.highestPrice,
-                    itemsCount = p.itemsCount
+                    Date = DateTime.TryParse(p.date, out var parsedDate) ? parsedDate : DateTime.MinValue,
+                    LowestPrice = p.lowestPrice,
+                    AveragePrice = p.averagePrice,
+                    HighestPrice = p.highestPrice,
+                    ItemsCount = p.itemsCount
                 }).ToList() ?? new List<ItemPriceHistoryEntry>());
         }
     }

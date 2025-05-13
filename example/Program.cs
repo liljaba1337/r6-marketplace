@@ -1,4 +1,5 @@
 ﻿using r6_marketplace;
+using r6_marketplace.Extensions;
 
 namespace Example
 {
@@ -36,7 +37,7 @@ namespace Example
                 Console.WriteLine($"30 days highest daily average: {pricehistory.AllTimeAverageHigh}");
                 foreach (var itemPrice in pricehistory)
                 {
-                    Console.WriteLine($"Average price: {itemPrice.averagePrice} - Date: {itemPrice.date}");
+                    Console.WriteLine($"Average price: {itemPrice.AveragePrice} - Date: {itemPrice.Date}");
                 }
             }
 
@@ -53,6 +54,22 @@ namespace Example
                 limit: 40,
                 offset: 0
             );
+
+            // Get your balance
+            int balance = await client.AccountEndpoints.GetBalance();
+
+            // Get your inventory
+            var inventory = await client.AccountEndpoints.GetInventory(
+                limit: 500
+            );
+
+            // And its total value
+            var totalValue = inventory.GetInventoryValue();
+            Console.WriteLine($"Total value: {totalValue.TotalValue}");
+            Console.WriteLine($"Total value without fee: {totalValue.TotalValueWithoutFee}");
+
+            // Get your open orders
+            var orders = await client.TransactionsEndpoints.GetActiveOrders();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using r6_marketplace.Classes.Item.Error;
+using r6_marketplace.Utils.Errors.API;
 using r6_marketplace.Utils.Exceptions;
 using static r6_marketplace.Utils.Data;
 

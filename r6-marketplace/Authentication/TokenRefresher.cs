@@ -1,4 +1,4 @@
-﻿//#pragma warning disable CS8604
+﻿// This is not ready and should not be used yet.
 
 using r6_marketplace.Utils;
 using static r6_marketplace.R6MarketplaceClient;
