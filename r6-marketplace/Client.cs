@@ -46,8 +46,8 @@ namespace r6_marketplace
             ItemInfoEndpoints = new ItemInfoEndpoints(web);
             SearchEndpoints = new SearchEndpoints(web);
             TokenRefresher = new TokenRefresher(web);
-            AccountEndpoints = new AccountEndpoints(web);
             TransactionsEndpoints = new TransactionsEndpoints(web);
+            AccountEndpoints = new AccountEndpoints(web, TransactionsEndpoints);
         }
 
         /// <summary>

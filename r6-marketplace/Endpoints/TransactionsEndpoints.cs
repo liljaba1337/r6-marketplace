@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
 
@@ -20,9 +21,9 @@ namespace r6_marketplace.Endpoints
         /// <param name="limit">I don't really understand why it's here, as you can't have more than 10 active orders at a time anyway.
         /// But Ubisoft API requires this parameter, so I thought it might be useful to include it here. Must be non-negative.</param>
         /// <param name="offset">The number of orders to skip before returning results. Must be non-negative.</param>
-        /// <returns>A read-only list of <see cref="Classes.GetActiveOrders.Simplified.Order"/> instances (may be empty if there are no orders)
+        /// <returns>A read-only list of <see cref="Classes.Orders.Order"/> instances (may be empty if there are no orders)
         /// or null if an error occured</returns>
-        public async Task<IReadOnlyList<Classes.GetActiveOrders.Simplified.Order>?>
+        public async Task<IReadOnlyList<Classes.Orders.Order>?>
             GetActiveOrders(Data.Local local = Data.Local.en, int limit = 40, int offset = 0)
         {
             web.EnsureAuthenticated();
@@ -34,18 +35,18 @@ namespace r6_marketplace.Endpoints
                 JsonSerializer.Serialize(new RequestBodies.AccountOrders.Active.Root(limit, offset).AsList()),
                 local: local);
 
-            var rawitem = await response.DeserializeAsyncSafe<List<Classes.GetActiveOrders.Raw.Root>>(false);
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.Orders.Raw.Root>>(false);
             if (rawitem is not { Count: > 0 })
                 return null;
 
-            return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.GetActiveOrders.Simplified.Order()
+            return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.Orders.Order()
             {
                 ID = x.tradeId,
-                OrderType = Classes.GetActiveOrders.Simplified.Types.ConvertOrderType(x.category),
+                OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
                 CreatedAt = x.createdAt,
                 ExpiresAt = x.expiresAt,
                 LastModifiedAt = x.lastModifiedAt,
-                Item = new Classes.Item.Item()
+                Item = new Item()
                 {
                     ID = x.tradeItems[0].item.itemId,
                     Name = x.tradeItems[0].item.name,
@@ -58,5 +59,57 @@ namespace r6_marketplace.Endpoints
                 NetAmount = x.category == "Sell" ? x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0,
             }).ToList();
         }
+
+        /// <summary>
+        /// Create a sell order for an item.
+        /// </summary>
+        /// <param name="itemid">The ID of the item.</param>
+        /// <param name="price">The price you want to sell this item for. Must be between 10 and 1000000.</param>
+        /// <returns>An instance of <see cref="Classes.Orders.Order"/> if the order was places successfully.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="Exception"></exception>
+        public async Task<Classes.Orders.Order> CreateSellOrder(string itemid, int price)
+        {
+            web.EnsureAuthenticated();
+            if (price < 10 || price > 1000000)
+                throw new ArgumentOutOfRangeException(nameof(price), "Price must be between 10 and 1000000.");
+            var response = await web.Post(Data.dataUri, new RequestBodies.AccountOrders.Sell.Root(itemid, price).AsJson());
+
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.CreateSellOrder.Root>>(false);
+            var x = rawitem?[0]?.data?.createSellOrder?.trade;
+
+            if (x == null)
+                throw new Exception("An error occurred. The item doesn't exist or you don't have access to the marketplace.");
+
+            return new Classes.Orders.Order()
+            {
+                ID = x.tradeId,
+                OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
+                CreatedAt = x.createdAt,
+                ExpiresAt = x.expiresAt,
+                LastModifiedAt = x.lastModifiedAt,
+                Item = new Item()
+                {
+                    ID = x.tradeItems[0].item.itemId,
+                    Name = x.tradeItems[0].item.name,
+                    AssetUrl = x.tradeItems[0].item.assetUrl,
+                    Type = x.tradeItems[0].item.type,
+                    Tags = x.tradeItems[0].item.tags
+                },
+                Price = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price : 0,
+                Fee = x.paymentOptions.Count > 0 ? x.paymentOptions[0].transactionFee : 0,
+                NetAmount = x.category == "Sell" ? x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0,
+            };
+        }
+        /// <summary>
+        /// Create a sell order for an item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="price">The price you want to sell this item for. Must be between 10 and 1000000.</param>
+        /// <returns>An instance of <see cref="Classes.Orders.Order"/> if the order was places successfully.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="Exception"></exception>
+        public async Task<Classes.Orders.Order> CreateSellOrder(SellableItem item, int price)
+            => await CreateSellOrder(item.ID, price);
     }
 }

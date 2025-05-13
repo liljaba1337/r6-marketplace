@@ -1,18 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
+using static r6_marketplace.Extensions.ItemsExtensions;
 using static r6_marketplace.Endpoints.SearchEndpoints;
 
 namespace r6_marketplace.Endpoints
 {
+    public static class AccountEndpointsExtensions
+    {
+        /// <summary>
+        /// Get the total value of the inventory based on the current lowest price, last sale price, and current lowest buy order price.
+        /// </summary>
+        /// <returns>An <see cref="InventoryValue"/> instance containing all the calculated values.</returns>
+        public static InventoryValue GetInventoryValue(this IReadOnlyList<SellableItem> items)
+            => items._GetInventoryValue();
+    }
     public class AccountEndpoints : EndpointsBase
     {
-        internal AccountEndpoints(Web web) : base(web) { }
+        private readonly TransactionsEndpoints transactionsEndpoints;
+        internal AccountEndpoints(Web web, TransactionsEndpoints transactionsEndpoints) : base(web)
+        { this.transactionsEndpoints = transactionsEndpoints; }
         /// <summary>
         /// Get the current balance of the account.
         /// </summary>
@@ -39,8 +52,8 @@ namespace r6_marketplace.Endpoints
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
         /// </exception>
-        /// <returns>A read-only of <see cref="SellableItem"/>.
-        /// An empty list is returned if you either don't have any items or don't have access to the marketplace.</returns>
+        /// <returns>A read-only list of <see cref="SellableItem"/>.
+        /// An empty list can be returned if you don't have access to the marketplace, but I'm not sure about that.</returns>
         public async Task<IReadOnlyList<SellableItem>> GetInventory(
             string? name = default, List<string>? types = default, List<string>? tags = default,
             SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
@@ -59,7 +72,7 @@ namespace r6_marketplace.Endpoints
             var json = await response.DeserializeAsyncSafe<List<Classes.InventoryResponse.RawData.Root>>(false);
             if (json == null || json[0].data.game.viewer.meta.marketableItems.nodes.Count == 0)
                 return new List<SellableItem>();
-            return json[0].data.game.viewer.meta.marketableItems.nodes.Select(x => new SellableItem
+            return json[0].data.game.viewer.meta.marketableItems.nodes.Select(x => new SellableItem(transactionsEndpoints)
             {
                 ID = x.item.itemId,
                 Name = x.item.name,

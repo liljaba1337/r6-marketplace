@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using r6_marketplace.Classes.Item;
 using r6_marketplace.Utils;
 
-namespace r6_marketplace.Classes.GetActiveOrders.Raw
+namespace r6_marketplace.Classes.Orders.Raw
 {
     internal class Buy
     {
@@ -137,7 +137,7 @@ namespace r6_marketplace.Classes.GetActiveOrders.Raw
     }
 }
 
-namespace r6_marketplace.Classes.GetActiveOrders.Simplified
+namespace r6_marketplace.Classes.Orders
 {
     internal static class Types
     {

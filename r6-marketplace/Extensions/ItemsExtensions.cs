@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using r6_marketplace.Classes.Item;
+﻿using r6_marketplace.Classes.Item;
 
 namespace r6_marketplace.Extensions
 {
     public static class ItemsExtensions
     {
         private const double FeeMultiplier = 0.9;
-        /// <summary>
-        /// Calculates the total value of the inventory based on the current lowest price, last sale price, and current lowest buy order price.
-        /// </summary>
-        /// <returns>An <see cref="InventoryValue"/> instance containing all the calculated values.</returns>
-        public static InventoryValue GetInventoryValue(this IReadOnlyList<SellableItem> items)
+        internal static InventoryValue _GetInventoryValue(this IReadOnlyList<SellableItem> items)
         {
             int total = 0, totalWithoutFee = 0;
             int lastSale = 0, lastSaleWithoutFee = 0;
@@ -39,7 +30,7 @@ namespace r6_marketplace.Extensions
             return new InventoryValue(total, totalWithoutFee, lastSale, lastSaleWithoutFee, autobuy, autobuyWithoutFee);
         }
 
-        public struct InventoryValue
+        public readonly struct InventoryValue
         {
             /// <summary>
             /// The total value of the inventory based on the current lowest price.
@@ -76,7 +67,8 @@ namespace r6_marketplace.Extensions
                 TotalValueAutobuy = totalValueAutobuy;
                 TotalValueAutobuyWithoutFee = totalValueAutobuyWithoutFee;
             }
-            public override string ToString() => TotalValue.ToString();
+            /// <returns><see cref="TotalValue"/></returns>
+            public override readonly string ToString() => TotalValue.ToString();
         }
     }
 }

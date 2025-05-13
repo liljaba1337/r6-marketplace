@@ -1,5 +1,5 @@
 ﻿using r6_marketplace;
-using r6_marketplace.Extensions;
+using r6_marketplace.Endpoints;
 
 namespace Example
 {
