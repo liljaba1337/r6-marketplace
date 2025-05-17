@@ -4,7 +4,7 @@ using r6_marketplace.Authentication;
 
 namespace r6_marketplace
 {
-    public class R6MarketplaceClient
+    public sealed class R6MarketplaceClient
     {
         public readonly ItemInfoEndpoints ItemInfoEndpoints;
         public readonly SearchEndpoints SearchEndpoints;
@@ -13,7 +13,7 @@ namespace r6_marketplace
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
-        [Obsolete("This event is not ready yet and should not be used.", true)]
+        [Obsolete("This event is not ready yet and should not be used.", false)]
         public event TokenRefreshedEventHandler? TokenRefreshed
         {
             add => TokenRefresher.TokenRefreshed += value;

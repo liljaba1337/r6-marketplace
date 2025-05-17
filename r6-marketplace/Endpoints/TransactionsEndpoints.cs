@@ -50,7 +50,7 @@ namespace r6_marketplace.Endpoints
                 {
                     ID = x.tradeItems[0].item.itemId,
                     Name = x.tradeItems[0].item.name,
-                    AssetUrl = x.tradeItems[0].item.assetUrl,
+                    AssetUrl = new Classes.ImageUri(x.tradeItems[0].item.assetUrl),
                     Type = x.tradeItems[0].item.type,
                     Tags = x.tradeItems[0].item.tags
                 },
@@ -92,7 +92,7 @@ namespace r6_marketplace.Endpoints
                 {
                     ID = x.tradeItems[0].item.itemId,
                     Name = x.tradeItems[0].item.name,
-                    AssetUrl = x.tradeItems[0].item.assetUrl,
+                    AssetUrl = new Classes.ImageUri(x.tradeItems[0].item.assetUrl),
                     Type = x.tradeItems[0].item.type,
                     Tags = x.tradeItems[0].item.tags
                 },

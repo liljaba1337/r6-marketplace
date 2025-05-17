@@ -93,7 +93,7 @@ namespace r6_marketplace.Endpoints
             {
                 ID = x.item.itemId,
                 Name = x.item.name,
-                AssetUrl = x.item.assetUrl,
+                AssetUrl = new Classes.ImageUri(x.item.assetUrl),
                 Type = x.item.type,
                 Tags = x.item.tags,
                 LastSoldAtPrice = x.marketData.lastSoldAt[0].price,

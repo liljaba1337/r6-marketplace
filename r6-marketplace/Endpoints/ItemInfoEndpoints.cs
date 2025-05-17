@@ -35,7 +35,7 @@ namespace r6_marketplace.Endpoints
             {
                 ID = rawitem[0].data.game.marketableItem.item.itemId,
                 Name = rawitem[0].data.game.marketableItem.item.name,
-                AssetUrl = rawitem[0].data.game.marketableItem.item.assetUrl,
+                AssetUrl = new Classes.ImageUri(rawitem[0].data.game.marketableItem.item.assetUrl),
                 Type = rawitem[0].data.game.marketableItem.item.type,
                 Tags = rawitem[0].data.game.marketableItem.item.tags,
                 BuyOrdersStats = buyStats != null ? new OrdersStats()

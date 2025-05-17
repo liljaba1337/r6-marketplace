@@ -15,7 +15,7 @@ namespace r6_marketplace.Classes.Item
         public override string ToString() => Name;
         public string ID { get; internal set; }
         public string Name { get; internal set; }
-        public string AssetUrl { get; internal set; }
+        public ImageUri AssetUrl { get; internal set; }
         public string Type { get; internal set; }
         /// <summary>
         /// Weapon name is usually at index 0, release year/season at index 3, and rarity at index 5.
