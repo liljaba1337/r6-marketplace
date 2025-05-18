@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
 
@@ -11,7 +7,7 @@ namespace r6_marketplace.Authentication
 {
     internal static class Authentication
     {
-        internal static async Task<r6_marketplace.Classes.AuthenticationResponse>Authenticate(string email, string password)
+        internal static async Task<Classes.AuthenticationResponse>Authenticate(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -22,7 +18,7 @@ namespace r6_marketplace.Authentication
             var bytes = Encoding.UTF8.GetBytes(auth);
             string credentialsb64 = Convert.ToBase64String(bytes);
 
-            var data = $"{{\"rememberMe\": false}}"; // for testing purposes. will change to true later
+            var data = $"{{\"rememberMe\": false}}";
             var headers = new Dictionary<string, string>
             {
                 { "Authorization", $"Basic {credentialsb64}" }

@@ -14,13 +14,13 @@ namespace r6_marketplace.Classes
     /// </summary>
     public class ImageUri
     {
-        private Uri _value;
+        private readonly Uri _value;
         internal ImageUri(string value)
         {
             _value = new Uri(value);
         }
-
         public static implicit operator string(ImageUri str) => str._value.ToString();
+        public static implicit operator Uri(ImageUri str) => str._value;
         public override string ToString() => _value.ToString();
         /// <summary>
         /// Download the image as a stream.
@@ -43,5 +43,21 @@ namespace r6_marketplace.Classes
                 await stream.CopyToAsync(fileStream);
             }
         }
+
+        // Equality members
+        public override bool Equals(object? obj) => Equals(obj as ImageUri);
+        public bool Equals(ImageUri? other) => other != null && _value.Equals(other._value);
+        public override int GetHashCode() => _value.GetHashCode();
+        public static bool operator ==(ImageUri? left, ImageUri? right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+
+            if (left is null || right is null)
+                return false;
+
+            return left.Equals(right);
+        }
+        public static bool operator !=(ImageUri? left, ImageUri? right) => !(left == right);
     }
 }
