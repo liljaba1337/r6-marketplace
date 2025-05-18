@@ -1,6 +1,26 @@
 ﻿using r6_marketplace.Classes.Orders.Raw;
 using r6_marketplace.RequestBodies.Shared;
 
+namespace r6_marketplace.RequestBodies.AccountOrders.History
+{
+    internal class Root : RequestRoot<Variables>
+    {
+        public Root(int limit, int offset) : base(new Variables(limit, offset)) { }
+        public override string operationName => "GetTransactionsHistory";
+        public override string query => RequestQueries.GetOrdersHistoryData;
+    }
+    internal class Variables : BaseVariables
+    {
+        public Variables(int limit, int offset)
+        {
+            this.limit = limit;
+            this.offset = offset;
+        }
+        public int limit { get; }
+        public int offset { get; }
+    }
+}
+
 namespace r6_marketplace.RequestBodies.AccountOrders.Active
 {
     internal class Root : RequestRoot<Variables>

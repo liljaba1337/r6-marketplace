@@ -30,7 +30,7 @@ namespace r6_marketplace.Classes.Item
         /// <summary>
         /// The time of the last sale.
         /// </summary>
-        public DateTime LastSoldAtTime { get; internal set; }
+        public DateTime? LastSoldAtTime { get; internal set; }
         public OrdersStats? SellOrdersStats { get; internal set; }
         public OrdersStats? BuyOrdersStats { get; internal set; }
         /// <summary>

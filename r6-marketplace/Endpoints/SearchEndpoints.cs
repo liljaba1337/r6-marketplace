@@ -6,7 +6,9 @@ namespace r6_marketplace.Endpoints
 {
     public class SearchEndpoints : EndpointsBase
     {
-        internal SearchEndpoints(Web web) : base(web) { }
+        private readonly TransactionsEndpoints transactionsEndpoints;
+        internal SearchEndpoints(Web web, TransactionsEndpoints transactionsEndpoints) : base(web)
+        { this.transactionsEndpoints = transactionsEndpoints; }
         public enum SortBy
         {
             PurchaseAvailaible,
@@ -89,7 +91,7 @@ namespace r6_marketplace.Endpoints
             if(json == null || json[0].data.game.marketableItems.nodes.Count == 0)
                 return new List<PurchasableItem>();
 
-            return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem
+            return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem(transactionsEndpoints)
             {
                 ID = x.item.itemId,
                 Name = x.item.name,

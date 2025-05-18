@@ -27,6 +27,17 @@ namespace r6_marketplace.Utils
             Buy,
             Sell
         }
+        public enum OrderState
+        {
+            /// <summary>
+            /// Purchased / sold successfully.
+            /// </summary>
+            Succeeded,
+            /// <summary>
+            /// Most likely cancelled.
+            /// </summary>
+            Failed
+        }
         public static readonly Uri dataUri = new Uri("https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql");
         public static readonly Uri authUri = new Uri("https://public-ubiservices.ubi.com/v3/profiles/sessions");
     }

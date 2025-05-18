@@ -44,10 +44,10 @@ namespace r6_marketplace
             web = new Web(httpClient ?? new HttpClient(), token);
 
             ItemInfoEndpoints = new ItemInfoEndpoints(web);
-            SearchEndpoints = new SearchEndpoints(web);
             TokenRefresher = new TokenRefresher(web);
             TransactionsEndpoints = new TransactionsEndpoints(web);
             AccountEndpoints = new AccountEndpoints(web, TransactionsEndpoints);
+            SearchEndpoints = new SearchEndpoints(web, TransactionsEndpoints);
         }
 
         /// <summary>

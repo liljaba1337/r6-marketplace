@@ -151,6 +151,15 @@ namespace r6_marketplace.Classes.Orders
                 _ => throw new ArgumentOutOfRangeException(nameof(_ordertype), _ordertype, null)
             };
         }
+        internal static Data.OrderState ConvertOrderState(string _orderstate)
+        {
+            return _orderstate switch
+            {
+                "Succeeded" => Data.OrderState.Succeeded,
+                "Failed" => Data.OrderState.Failed,
+                _ => throw new ArgumentOutOfRangeException(nameof(_orderstate), _orderstate, null)
+            };
+        }
     }
     // Might be a good idea to split this into BuyOrder and SellOrder later.
     public class Order
@@ -180,5 +189,32 @@ namespace r6_marketplace.Classes.Orders
         /// So right now there is no way to tell if an order was cancelled or not, except retrieving active orders again.</returns>
         public async Task Cancel()
             => await transactionsEndpoints.CancelOrder(ID);
+    }
+    /// <summary>
+    /// A normal <see cref="Order"/> class with some extra properties.
+    /// </summary>
+    public class HistoryOrder : Order
+    {
+        internal HistoryOrder(TransactionsEndpoints transactions) : base(transactions) { }
+        public Data.OrderState State { get; internal set; }
+        /// <summary>
+        /// <c>Always null.</c> This is a placeholder for the future.
+        /// </summary>
+        new public readonly DateTime? ExpiresAt = null;
+        /// <summary>
+        /// Usually the time when the order was filled / cancelled / expired.
+        /// </summary>
+        new public DateTime LastModifiedAt { get; internal set; }
+        /// <summary>
+        /// Place the same order again if it was cancelled / expired. This will NOT work if the order was completed.
+        /// </summary>
+        /// <param name="newPrice">New price if you wish to edit it. Must be between 10 and 1,000,000.
+        /// Leave at 0 to use the same price as before.</param>
+        /// <returns>An instance of <see cref="Orders.Order"/> if the order was places successfully.</returns>
+        [Obsolete("not yet completed, do not use", true)]
+        public Task Repeat(int newPrice = 0)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -33,7 +33,8 @@ namespace r6_marketplace.Extensions
         private static bool IsNotFoundError(List<ApiError>? errors)
             => errors?.Any(e => e.errors?.Any(err => err.message.Contains("404")) == true) == true;
         private static bool IsInvalidTokenError(List<ApiError>? errors)
-            => errors?.Any(e => e.errors?.Any(err => err.message.Contains("The authentication ticket is invalid")) == true) == true;
+            => errors?.Any(e => e.errors?.Any(err => err.message.Contains("The authentication ticket is invalid") ||
+            err.message.Contains("Ticket is expired")) == true) == true;
         public static string Format(this r6_marketplace.Utils.Data.Local lang)
         {
             return lang switch

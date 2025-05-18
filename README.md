@@ -13,13 +13,16 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 - [x] Retrieve item sale history
 - [x] Search items by name or filters
 - [x] Retrieve account details (balance/inventory)
-- [ ] Retrieve orders (open/history)
+- [x] Retrieve orders (open/history)
 - [x] Manage sale orders
 - [x] Manage buy orders
 - [ ] Updates events handling
 - [ ] Token refresher
 
 ### Improvements (mostly code quality related)
+- [ ] Order / Item refactoring
+- [ ] Better filtering logic
+- [ ] Better filenaming
 - [ ] Advanced error handling
 - [ ] Optimized requests
 
@@ -27,7 +30,8 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ## Installation
 
-NuGet package is coming soon.  
+NuGet package is coming soon. I plan to complete all the basic features, release the package and then work on improvements.
+
 For now, you can clone the repo and reference it directly in your project.
 
 ```bash

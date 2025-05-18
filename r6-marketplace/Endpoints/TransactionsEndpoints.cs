@@ -21,10 +21,9 @@ namespace r6_marketplace.Endpoints
         /// <param name="limit">I don't really understand why it's here, as you can't have more than 10 active orders at a time anyway.
         /// But Ubisoft API requires this parameter, so I thought it might be useful to include it here. Must be non-negative.</param>
         /// <param name="offset">The number of orders to skip before returning results. Must be non-negative.</param>
-        /// <returns>A read-only list of <see cref="Classes.Orders.Order"/> instances (may be empty if there are no orders)
-        /// or null if an error occured</returns>
+        /// <returns>A read-only list of <see cref="Classes.Orders.Order"/> instances (empty if there are no orders).</returns>
         public async Task<IReadOnlyList<Classes.Orders.Order>?>
-            GetActiveOrders(Data.Local local = Data.Local.en, int limit = 40, int offset = 0)
+            GetActiveOrders(int limit = 40, int offset = 0, Data.Local local = Data.Local.en)
         {
             web.EnsureAuthenticated();
 
@@ -37,7 +36,7 @@ namespace r6_marketplace.Endpoints
 
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.Orders.Raw.Root>>(false);
             if (rawitem is not { Count: > 0 })
-                return null;
+                return new List<Classes.Orders.Order>();
 
             return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.Orders.Order(this)
             {
@@ -55,7 +54,51 @@ namespace r6_marketplace.Endpoints
                     Tags = x.tradeItems[0].item.tags
                 },
                 Price = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price : x.paymentProposal.price,
-                Fee = x.paymentOptions.Count > 0 ? x.paymentOptions[0].transactionFee : 0,
+                Fee = x.paymentOptions.Count > 0 ? x.category == "Sell" ? x.paymentOptions[0].transactionFee : 0 : 0,
+                NetAmount = x.paymentOptions.Count > 0 ? x.category == "Sell" ?
+                    x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0 : 0,
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Get a history of buy/sell orders.
+        /// </summary>
+        /// <param name="local">Language to retrieve items' metadata in.</param>
+        /// <param name="limit">The number of orders to return. Must be non-negative.</param>
+        /// <param name="offset">The number of orders to skip before returning results. Must be non-negative.</param>
+        /// <returns>A read-only list of <see cref="Classes.Orders.HistoryOrder"/> instances (empty if there are no orders).</returns>
+        public async Task<IReadOnlyList<Classes.Orders.HistoryOrder>>
+            GetOrdersHistory(int limit = 40, int offset = 0, Data.Local local = Data.Local.en)
+        {
+            web.EnsureAuthenticated();
+
+            if (limit < 0 || offset < 0)
+                throw new ArgumentOutOfRangeException(nameof(limit), "Limit and offset cannot be negative.");
+
+            var response = await web.Post(Data.dataUri,
+                JsonSerializer.Serialize(new RequestBodies.AccountOrders.History.Root(limit, offset).AsList()),
+                local: local);
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.Orders.History.Raw.Root>>(false);
+            if (rawitem is not { Count: > 0 })
+                return new List<Classes.Orders.HistoryOrder>();
+
+            return rawitem[0].data.game.viewer.meta.trades.nodes.Select(x => new Classes.Orders.HistoryOrder(this)
+            {
+                ID = x.tradeId,
+                OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
+                CreatedAt = x.createdAt,
+                State = Classes.Orders.Types.ConvertOrderState(x.state),
+                LastModifiedAt = x.lastModifiedAt,
+                Item = new Item()
+                {
+                    ID = x.tradeItems[0].item.itemId,
+                    Name = x.tradeItems[0].item.name,
+                    AssetUrl = new Classes.ImageUri(x.tradeItems[0].item.assetUrl),
+                    Type = x.tradeItems[0].item.type,
+                    Tags = x.tradeItems[0].item.tags
+                },
+                Price = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price : 0,
+                Fee = x.paymentOptions.Count > 0 ? x.category == "Sell" ? x.paymentOptions[0].transactionFee : 0 : 0,
                 NetAmount = x.paymentOptions.Count > 0 ? x.category == "Sell" ?
                     x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0 : 0,
             }).ToList();
