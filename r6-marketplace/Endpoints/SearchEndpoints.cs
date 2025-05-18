@@ -65,7 +65,7 @@ namespace r6_marketplace.Endpoints
         /// <param name="sortDirection">The direction of sorting.</param>
         /// <param name="limit">The maximum number of items to return. Must be between 0 and 500.</param>
         /// <param name="offset">The number of items to skip before returning results. Must be non-negative.</param>
-        /// <returns>A read-only list of matching <see cref="Item"/> objects.</returns>
+        /// <returns>A read-only list of matching <see cref="PurchasableItem"/> objects.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
         /// </exception>

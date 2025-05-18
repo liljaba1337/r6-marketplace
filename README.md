@@ -6,7 +6,7 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ---
 
-## Features (Planned / In Progress)
+## Features (Planned / Completed)
 
 - [x] Authentication flow
 - [x] Retrieve item data by ID
@@ -15,8 +15,13 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 - [x] Retrieve account details (balance/inventory)
 - [ ] Retrieve orders (open/history)
 - [x] Manage sale orders
-- [ ] Manage buy orders
+- [x] Manage buy orders
 - [ ] Updates events handling
+- [ ] Token refresher
+
+### Improvements (mostly code quality related)
+- [ ] Advanced error handling
+- [ ] Optimized requests
 
 ---
 

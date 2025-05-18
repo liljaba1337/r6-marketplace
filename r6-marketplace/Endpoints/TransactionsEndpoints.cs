@@ -56,7 +56,8 @@ namespace r6_marketplace.Endpoints
                 },
                 Price = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price : x.paymentProposal.price,
                 Fee = x.paymentOptions.Count > 0 ? x.paymentOptions[0].transactionFee : 0,
-                NetAmount = x.category == "Sell" ? x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0,
+                NetAmount = x.paymentOptions.Count > 0 ? x.category == "Sell" ?
+                    x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0 : 0,
             }).ToList();
         }
 
@@ -68,12 +69,12 @@ namespace r6_marketplace.Endpoints
         /// <returns>An instance of <see cref="Classes.Orders.Order"/> if the order was places successfully.</returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="Exception"></exception>
-        public async Task<Classes.Orders.Order> CreateSellOrder(string itemid, int price)
+        public async Task<Classes.Orders.Order> CreateSellOrder(string itemid, int price, Data.Local local = Data.Local.en)
         {
             web.EnsureAuthenticated();
             if (price < 10 || price > 1000000)
                 throw new ArgumentOutOfRangeException(nameof(price), "Price must be between 10 and 1000000.");
-            var response = await web.Post(Data.dataUri, new RequestBodies.AccountOrders.Sell.Root(itemid, price).AsJson());
+            var response = await web.Post(Data.dataUri, new RequestBodies.AccountOrders.Sell.Root(itemid, price).AsJson(), local:local);
 
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.CreateSellOrder.Root>>(false);
             var x = rawitem?[0]?.data?.createSellOrder?.trade;
@@ -98,13 +99,55 @@ namespace r6_marketplace.Endpoints
                 },
                 Price = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price : 0,
                 Fee = x.paymentOptions.Count > 0 ? x.paymentOptions[0].transactionFee : 0,
-                NetAmount = x.category == "Sell" ? x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0,
+                NetAmount = x.paymentOptions.Count > 0 ? x.paymentOptions[0].price - x.paymentOptions[0].transactionFee : 0,
+            };
+        }
+        /// <summary>
+        /// Create a buy order for an item.
+        /// </summary>
+        /// <param name="itemid">The ID of the item.</param>
+        /// <param name="price">The price you want to buy this item for. Must be between 10 and 1000000.</param>
+        /// <returns>An instance of <see cref="Classes.Orders.Order"/> if the order was places successfully.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="Exception"></exception>
+        public async Task<Classes.Orders.Order> CreateBuyOrder(string itemid, int price, Data.Local local = Data.Local.en)
+        {
+            web.EnsureAuthenticated();
+            if (price < 10 || price > 1000000)
+                throw new ArgumentOutOfRangeException(nameof(price), "Price must be between 10 and 1000000.");
+            var response = await web.Post(Data.dataUri, new RequestBodies.AccountOrders.Buy.Root(itemid, price).AsJson(), local:local);
+
+            var rawitem = await response.DeserializeAsyncSafe<List<Classes.CreateBuyOrder.Root>>(false);
+            var x = rawitem?[0]?.data?.createBuyOrder?.trade;
+
+            if (x == null)
+                throw new Exception("An error occurred. The item doesn't exist, you don't have access to the marketplace " +
+                    "or you have exceeded your balance.");
+
+            return new Classes.Orders.Order(this)
+            {
+                ID = x.tradeId,
+                OrderType = Classes.Orders.Types.ConvertOrderType(x.category),
+                CreatedAt = x.createdAt,
+                ExpiresAt = x.expiresAt,
+                LastModifiedAt = x.lastModifiedAt,
+                Item = new Item()
+                {
+                    ID = x.tradeItems[0].item.itemId,
+                    Name = x.tradeItems[0].item.name,
+                    AssetUrl = new Classes.ImageUri(x.tradeItems[0].item.assetUrl),
+                    Type = x.tradeItems[0].item.type,
+                    Tags = x.tradeItems[0].item.tags
+                },
+                Price = x.paymentProposal.price,
+                Fee = 0,
+                NetAmount = 0,
             };
         }
         /// <summary>
         /// Cancel an order.
         /// </summary>
-        /// <param name="orderId">The ID of an order to cancel.</param>
+        /// <param name="orderId">The ID of the order.</param>
         /// <returns>For some reason, API always returns an error even if the order was cancelled successfully.
         /// So right now there is no way to tell if an order was cancelled or not, except retrieving active orders again.</returns>
         public async Task CancelOrder(string orderId)
