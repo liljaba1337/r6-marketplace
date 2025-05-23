@@ -1,6 +1,7 @@
 ﻿using r6_marketplace.Utils;
 using r6_marketplace.Endpoints;
 using r6_marketplace.Authentication;
+using r6_marketplace.Events;
 
 namespace r6_marketplace
 {
@@ -10,6 +11,7 @@ namespace r6_marketplace
         public readonly SearchEndpoints SearchEndpoints;
         public readonly AccountEndpoints AccountEndpoints;
         public readonly TransactionsEndpoints TransactionsEndpoints;
+        public readonly AccountEvents AccountEvents;
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
@@ -48,6 +50,7 @@ namespace r6_marketplace
             TransactionsEndpoints = new TransactionsEndpoints(web);
             AccountEndpoints = new AccountEndpoints(web, TransactionsEndpoints);
             SearchEndpoints = new SearchEndpoints(web, TransactionsEndpoints);
+            AccountEvents = new AccountEvents(AccountEndpoints);
         }
 
         /// <summary>

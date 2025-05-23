@@ -41,6 +41,16 @@ namespace r6_marketplace.Classes.Item
             return $"https://www.ubisoft.com/{lang.Format()}/game/rainbow-six/siege/marketplace" +
                 $"?route=buy%2Fitem-details&itemId={ID}";
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Item other && ID == other.ID;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
+        }
     }
     public class OrdersStats
     {
