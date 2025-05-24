@@ -15,19 +15,34 @@ namespace r6_marketplace
         private readonly TokenRefresher TokenRefresher;
         private readonly Web web;
 
-        [Obsolete("This event is not ready yet and should not be used.", false)]
-        public event TokenRefreshedEventHandler? TokenRefreshed
+        #region token refresher
+        /// <summary>
+        /// Triggered when the token is automatically refreshed.
+        /// </summary>
+        public event TokenRefreshedEventHandler? OnTokenRefreshed
         {
             add => TokenRefresher.TokenRefreshed += value;
             remove => TokenRefresher.TokenRefreshed -= value;
         }
 
         /// <summary>
-        /// The expiration time of the current token.  
-        /// When this time is reached, the token is automatically refreshed,  
-        /// and the <see cref="TokenRefreshed"/> event is triggered.
+        /// Enable or disable automatic token refreshing.
+        /// </summary>
+        /// <remarks>
+        /// Please note that the token will be refreshed immediately in order to capture the expiration time.
+        /// Also, if you call this method before subscribing to <see cref="OnTokenRefreshed"/>,
+        /// the event won't be triggered for the first time.
+        /// </remarks>
+        public void SetupTokenRefreshing(bool enabled = true)
+        {
+            TokenRefresher.SetupRefreshing(enabled);
+        }
+
+        /// <summary>
+        /// The expiration time of the current token.
         /// </summary>
         public DateTime? TokenExpiration => TokenRefresher.Expiration;
+        #endregion
 
         /// <summary>
         /// Returns true if the token is not null and the client is ready to process requests.

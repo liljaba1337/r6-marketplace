@@ -18,7 +18,7 @@ namespace r6_marketplace.Endpoints
         /// Get the total value of the inventory based on the current lowest price, last sale price, and current lowest buy order price.
         /// </summary>
         /// <returns>An <see cref="InventoryValue"/> instance containing all the calculated values.</returns>
-        public static InventoryValue GetInventoryValue(this IReadOnlyList<SellableItem> items)
+        public static InventoryValue GetTotalValue(this IReadOnlyList<SellableItem> items)
             => items._GetInventoryValue();
     }
     public class AccountEndpoints : EndpointsBase
@@ -94,6 +94,16 @@ namespace r6_marketplace.Endpoints
                     activeCount = x.marketData.sellStats[0].activeCount
                 } : null
             }).ToList();
+        }
+
+        /// <summary>
+        /// Gets the total value of the inventory based on the current lowest price, last sale price, and current lowest buy order price.
+        /// </summary>
+        /// <returns>An <see cref="InventoryValue"/> instance containing all the calculated values.</returns>
+        public async Task<InventoryValue> GetInventoryValue()
+        {
+            var inventory = await GetInventory(limit: 400, sortBy:SortBy.LastSalePrice, sortDirection:SortDirection.DESC);
+            return inventory._GetInventoryValue();
         }
     }
 }

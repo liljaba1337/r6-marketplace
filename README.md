@@ -16,8 +16,8 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 - [x] Retrieve orders (open/history)
 - [x] Manage sale orders
 - [x] Manage buy orders
-- [ ] Updates events handling
-- [ ] Token refresher
+- [x] Updates events handling
+- [x] Token refresher
 
 ### Improvements (mostly code quality related)
 - [ ] Order / Item refactoring

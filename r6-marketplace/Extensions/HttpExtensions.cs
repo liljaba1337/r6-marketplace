@@ -22,12 +22,15 @@ namespace r6_marketplace.Extensions
             if (checkForStatusCode && !response.IsSuccessStatusCode)
                 throw new UnsuccessfulStatusCodeException(response.StatusCode.ToString());
             var json = await response.Content.ReadAsStringAsyncSafe();
-            var error = System.Text.Json.JsonSerializer.Deserialize<List<ApiError>?>(json);
-            if (checkFor404 && IsNotFoundError(error))
-                return default;
-            if (IsInvalidTokenError(error))
-                throw new InvalidTokenException("The authentication ticket is invalid. Please re-authenticate.");
-
+            try
+            {
+                var error = System.Text.Json.JsonSerializer.Deserialize<List<ApiError>?>(json);
+                if (checkFor404 && IsNotFoundError(error))
+                    return default;
+                if (IsInvalidTokenError(error))
+                    throw new InvalidTokenException("The authentication ticket is invalid. Please re-authenticate.");
+            }
+            catch { }
             return JsonSerializer.Deserialize<T>(json);
         }
         private static bool IsNotFoundError(List<ApiError>? errors)
