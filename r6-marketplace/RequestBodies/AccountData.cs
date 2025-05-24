@@ -74,11 +74,11 @@ namespace r6_marketplace.RequestBodies.AccountData.GetInventory
     {
         public FilterBy(List<string> types, List<string> tags, string text)
         {
-            this.types = types.Select(x => new List<string> { x }).ToList();
+            this.types = types;
             this.tags = tags.Select(x => new List<string> { x }).ToList();
             this.text = text;
         }
-        public List<List<string>> types { get; }
+        public List<string> types { get; }
         public List<List<string>> tags { get; }
         public string text { get; }
     }

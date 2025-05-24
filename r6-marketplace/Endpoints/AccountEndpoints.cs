@@ -39,25 +39,59 @@ namespace r6_marketplace.Endpoints
         }
 
         /// <summary>
-        /// Get the items from your inventory. Filtering is optional and extremely unintuitive at the moment,
-        /// so you may want to check the descriptions of all the parameters to understand everything.
+        /// Gets the items from your inventory with optional filtering.
         /// </summary>
         /// <param name="name">The name of the item to search for.</param>
-        /// <param name="types">A list of item TYPES (e.g. WeaponSkin or DroneSkin). Available types can be retrieved using <see cref="GetSearchTags"/> from the <see cref="r6_marketplace.Classes.Tags.Tags.Type"/> property.</param>
-        /// <param name="tags">A list of item TAGS. This is basically everything else from the response of <see cref="GetSearchTags"/> EXCEPT types.</param>
+        /// <param name="filters">A collection of <see cref="SearchTags"/>.</param>
         /// <param name="sortBy">The method of sorting.</param>
         /// <param name="sortDirection">The direction of sorting.</param>
-        /// <param name="limit">The maximum number of items to return. Must be between 0 and 500. Ubisoft typically uses 40.</param>
+        /// <param name="limit">The maximum number of items to return. Must be between 0 and 500.</param>
         /// <param name="offset">The number of items to skip before returning results. Must be non-negative.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if <paramref name="limit"/> or <paramref name="offset"/> is negative.
-        /// </exception>
-        /// <returns>A read-only list of <see cref="SellableItem"/>.
+        /// <param name="local">The locale to use for the search results. Defaults to English (en).</param>
         /// An empty list can be returned if you don't have access to the marketplace, but I'm not sure about that.</returns>
         public async Task<IReadOnlyList<SellableItem>> GetInventory(
-            string? name = default, List<string>? types = default, List<string>? tags = default,
-            SortBy sortBy = SortBy.PurchaseAvailaible, SortDirection sortDirection = SortDirection.DESC,
-            int limit = 40, int offset = 0
+            string name = "",
+            IEnumerable<Enum>? filters = null,
+            SortBy sortBy = SortBy.PurchaseAvailaible,
+            SortDirection sortDirection = SortDirection.DESC,
+            int limit = 40,
+            int offset = 0,
+            Data.Local local = Data.Local.en)
+        {
+            var (types, tags) = SearchTags.PrepareTags(filters);
+            return await _GetInventory(name, types, tags, sortBy, sortDirection, limit, offset, local);
+        }
+
+        /// <summary>
+        /// Gets the items from your inventory with optional filtering.
+        /// This method is kept as a fallback in case new filters are introduced that are not yet supported by this package.
+        /// </summary>
+        /// <remarks>
+        /// Direct use of this method is not recommended due to its complexity and lack of type safety.
+        /// Prefer using <see cref="GetInventory"/>, which provides enum-based filters and better usability.
+        /// </remarks>
+        /// <returns>A read-only list of matching <see cref="SellableItem"/> objects.</returns>
+        [Obsolete("This method is kept for compatibility reasons. Prefer using GetInventory with enum-based filters instead.")]
+        public async Task<IReadOnlyList<SellableItem>> GetInventoryUnrestricted(
+            string name,
+            List<string> types,
+            List<string> tags,
+            SortBy sortBy,
+            SortDirection sortDirection,
+            int limit,
+            int offset,
+            Data.Local local)
+            => await _GetInventory(name, types, tags, sortBy, sortDirection, limit, offset, local);
+
+        private async Task<IReadOnlyList<SellableItem>> _GetInventory(
+            string name,
+            List<string> types,
+            List<string> tags,
+            SortBy sortBy,
+            SortDirection sortDirection,
+            int limit,
+            int offset,
+            Data.Local local
             )
         {
             web.EnsureAuthenticated();
@@ -67,7 +101,7 @@ namespace r6_marketplace.Endpoints
                 throw new ArgumentOutOfRangeException(nameof(limit), "Limit cannot be greater than 500.");
 
             var response = await web.Post(Data.dataUri, new RequestBodies.AccountData.GetInventory.Root(
-                name ?? "", limit, offset, types ?? new List<string>(), tags ?? new List<string>(), sortBy, sortDirection).AsJson());
+                name, limit, offset, types, tags, sortBy, sortDirection).AsJson());
 
             var json = await response.DeserializeAsyncSafe<List<Classes.InventoryResponse.RawData.Root>>(false);
             if (json == null || json[0].data.game.viewer.meta.marketableItems.nodes.Count == 0)

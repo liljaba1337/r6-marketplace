@@ -31,7 +31,11 @@ namespace r6_marketplace.Classes.Item
         /// <param name="offset">Amount to add to or subtract from the base price.</param>
         /// <returns>An instance of <see cref="Orders.Order"/> if the order was places successfully.</returns>
         public async Task<Orders.Order> InstantSell(int offset = 0)
-            => await transactionsEndpoints.CreateSellOrder(ID, BuyOrdersStats.highestPrice + offset);
+        {
+            if (BuyOrdersStats?.highestPrice == null)
+                throw new InvalidOperationException("There are no buy orders for this item. Cannot instant sell.");
+            return await transactionsEndpoints.CreateSellOrder(ID, BuyOrdersStats.highestPrice + offset);
+        }
 
         /// <summary>
         /// Sell the item for 1 credit lower price than the current lowest sell order (undercut the market).
@@ -39,6 +43,10 @@ namespace r6_marketplace.Classes.Item
         /// <param name="offset">Amount to add to or subtract from the base price.</param>
         /// <returns>An instance of <see cref="Orders.Order"/> if the order was places successfully.</returns>
         public async Task<Orders.Order> BestPriceSell(int offset = 0)
-            => await transactionsEndpoints.CreateSellOrder(ID, SellOrdersStats.lowestPrice - 1 + offset);
+        {
+            if (SellOrdersStats?.lowestPrice == null)
+                throw new InvalidOperationException("There are no sell orders for this item. Cannot best price sell.");
+            return await transactionsEndpoints.CreateSellOrder(ID, SellOrdersStats.lowestPrice - 1 + offset);
+        }
     }
 }

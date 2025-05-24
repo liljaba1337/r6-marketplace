@@ -21,7 +21,7 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ### Improvements (mostly code quality related)
 - [ ] Order / Item refactoring
-- [ ] Better filtering logic
+- [x] Better filtering logic
 - [ ] Better filenaming
 - [ ] Advanced error handling
 - [ ] Optimized requests
