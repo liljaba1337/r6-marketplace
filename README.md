@@ -30,9 +30,15 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ## Installation
 
-NuGet package is coming soon. I plan to complete all the basic features, release the package and then work on improvements.
+### With NuGet:
+```
+# Command Line
+dotnet add package r6-marketplace
+# Visual Studio NuGet Package Manager
+Install-Package r6-marketplace
+```
 
-For now, you can clone the repo and reference it directly in your project.
+### Manually:
 
 ```bash
 git clone https://github.com/liljaba1337/r6-marketplace
