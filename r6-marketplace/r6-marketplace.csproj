@@ -5,6 +5,28 @@
     <RootNamespace>r6_marketplace</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>r6-marketplace</PackageId>
+    <Title>R6 Marketplace API Wrapper</Title>
+    <Authors>liljaba1337</Authors>
+    <Description>A .NET wrapper for the Rainbow Six Siege Marketplace API.</Description>
+    <Version>1.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/liljaba1337/r6-marketplace</RepositoryUrl>
+    <PackageTags>ubisoft;r6;rainbow6;rainbowsix;r6s;rainbowsixsiege;rainbow6siege</PackageTags>
+    <PackageReleaseNotes>First release!</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
