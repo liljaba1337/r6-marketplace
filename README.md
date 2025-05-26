@@ -41,24 +41,11 @@ Then add the `.csproj` to your solution or reference the compiled `.dll` manuall
 
 ---
 
-## Usage (Example)
+## Usage
 
-Documentation is not yet ready, so take a look at [the example code](https://github.com/liljaba1337/r6-marketplace/blob/master/example/Program.cs), containing all the finished features.
+[Examples](https://github.com/liljaba1337/r6-marketplace/tree/master/example)
 
----
-
-## Q&A
-
-**Q: Do I need to provide my account credentials?**
-
-**A: Yes. Ubisoft requires authorization for all requests.**
-However, advanced users can use their existing token instead of providing credentials. If you don’t need selling or buying functions, I recommend creating an alternate account.
-
-
-**Q: Do I need to have marketplace access on my account?**
-
-**A: Not for all methods.**
-Only the selling and buying (and maybe inventory) methods require marketplace access.
+[Documentation](https://github.com/liljaba1337/r6-marketplace/wiki)
 
 ---
 

@@ -1,4 +1,5 @@
 ﻿using r6_marketplace;
+using r6_marketplace.Classes.Orders;
 using r6_marketplace.Endpoints;
 
 namespace Example
@@ -69,7 +70,7 @@ namespace Example
             Console.WriteLine($"Total value without fee: {totalValue.TotalValueWithoutFee}");
 
             // Get your open orders
-            var orders = await client.TransactionsEndpoints.GetActiveOrders();
+            IReadOnlyList<Order> orders = await client.TransactionsEndpoints.GetActiveOrders();
         }
     }
 }

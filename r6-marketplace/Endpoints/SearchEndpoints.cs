@@ -33,7 +33,7 @@ namespace r6_marketplace.Endpoints
         /// Returns a list of all the search tags you can use in <see cref="SearchItem"/>.
         /// </summary>
         /// <returns>An instance of <see cref="Classes.Tags.Tags"/>.</returns>
-        [Obsolete("This method isn't needed anymore, as OBJECT exists. Still works, but may be removed in the future.")]
+        [Obsolete("This method isn't needed anymore. Still works, but may be removed in the future.")]
         public async Task<Classes.Tags.Tags> GetSearchTags()
         {
             web.EnsureAuthenticated();

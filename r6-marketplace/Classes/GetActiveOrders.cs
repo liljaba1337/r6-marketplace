@@ -211,7 +211,7 @@ namespace r6_marketplace.Classes.Orders
         /// <param name="newPrice">New price if you wish to edit it. Must be between 10 and 1,000,000.
         /// Leave at 0 to use the same price as before.</param>
         /// <returns>An instance of <see cref="Orders.Order"/> if the order was places successfully.</returns>
-        [Obsolete("not yet completed, do not use", true)]
+        [Obsolete("not finished, do not use", true)]
         public Task Repeat(int newPrice = 0)
         {
             return Task.CompletedTask;
