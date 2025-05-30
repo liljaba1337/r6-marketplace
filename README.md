@@ -2,7 +2,10 @@
 
 A .NET wrapper for the Rainbow Six Siege Marketplace API.  
 
-> **Note:** This project is under active development and is not yet feature-complete.
+![Dotnet Framework](https://img.shields.io/badge/Framework-.NET%208.0-purple.svg)
+![GitHub License](https://img.shields.io/github/license/liljaba1337/r6-marketplace)
+![NuGet Version](https://img.shields.io/nuget/v/r6-marketplace)
+![NuGet Downloads](https://img.shields.io/nuget/dt/r6-marketplace)
 
 ---
 
