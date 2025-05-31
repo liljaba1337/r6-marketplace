@@ -9,7 +9,11 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ---
 
-## Features (Planned / Completed)
+## Features
+
+Pretty much all the requests have already been implemented.
+<details>
+<summary>Click here to view the list of all the completed features</summary>
 
 - [x] Authentication flow
 - [x] Retrieve item data by ID
@@ -22,7 +26,9 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 - [x] Updates events handling
 - [x] Token refresher
 
-### Improvements (mostly code quality related)
+</details>
+
+### Planned / Completed improvements (what I'm focusing on right now)
 - [ ] Order / Item refactoring
 - [x] Better filtering logic
 - [ ] Better filenaming
@@ -35,26 +41,57 @@ A .NET wrapper for the Rainbow Six Siege Marketplace API.
 
 ### With NuGet:
 ```
-# Command Line
 dotnet add package r6-marketplace
-# Visual Studio NuGet Package Manager
-Install-Package r6-marketplace
 ```
 
-### Manually:
+### Or Visual Studio NuGet Package Manager:
 
 ```bash
-git clone https://github.com/liljaba1337/r6-marketplace
+Install-Package r6-marketplace
 ```
-Then add the `.csproj` to your solution or reference the compiled `.dll` manually.
 
 ---
 
 ## Usage
 
-[Examples](https://github.com/liljaba1337/r6-marketplace/tree/master/example)
+### [Documentation](https://github.com/liljaba1337/r6-marketplace/wiki)
 
-[Documentation](https://github.com/liljaba1337/r6-marketplace/wiki)
+### [Example](https://github.com/liljaba1337/r6-marketplace/tree/master/example) (I update it rarely so it may be outdated)
+
+---
+
+### Example
+
+<!-- START_SECTION:EXAMPLE -->
+
+```c#
+using r6_marketplace;
+using r6_marketplace.Endpoints;
+
+namespace Example
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            r6_marketplace.R6MarketplaceClient client = new r6_marketplace.R6MarketplaceClient();
+            await client.Authenticate("email", "password");
+
+            int balance = await client.AccountEndpoints.GetBalance();
+
+            var inventory = await client.AccountEndpoints.GetInventory(
+                limit: 500
+            );
+
+            var totalValue = inventory.GetInventoryValue();
+            Console.WriteLine($"Total value: {totalValue.TotalValue}");
+            Console.WriteLine($"Total value without fees: {totalValue.TotalValueWithoutFee}");
+        }
+    }
+}
+```
+
+<!-- END_SECTION:EXAMPLE -->
 
 ---
 
