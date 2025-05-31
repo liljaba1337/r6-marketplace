@@ -33,7 +33,6 @@ namespace r6_marketplace.Endpoints
         public async Task<int> GetBalance()
         {
             web.EnsureAuthenticated();
-            Console.WriteLine(new RequestBodies.AccountData.GetBalance.Root().AsJson());
             var response = await web.Post(Data.dataUri, new RequestBodies.AccountData.GetBalance.Root().AsJson());
             var rawBalance = await response.DeserializeAsyncSafe<List<Classes.BalanceResponse.Root>>();
             return rawBalance?[0]?.data?.game?.viewer?.meta?.secondaryStoreItem?.meta?.quantity ?? -1;
