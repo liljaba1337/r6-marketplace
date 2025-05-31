@@ -16,7 +16,7 @@ namespace r6_marketplace.RequestBodies.SearchItems
             base(new Variables(text, limit, offset, types, tags, sortBy, sortDirection))
         { }
         public override string operationName => "GetMarketableItems";
-        public override string query => RequestBodies.RequestQueries.SearchData;
+        public override string query => RequestBodies.RequestQueries.Get("Search");
     }
 
     internal class Variables : BaseVariables

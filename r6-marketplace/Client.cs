@@ -2,6 +2,7 @@
 using r6_marketplace.Endpoints;
 using r6_marketplace.Authentication;
 using r6_marketplace.Events;
+using r6_marketplace.RequestBodies;
 
 namespace r6_marketplace
 {

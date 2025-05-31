@@ -12,7 +12,7 @@ namespace r6_marketplace.RequestBodies.GetItemPriceHistory
         public Root(string itemId) : base(new Variables(itemId)) { }
 
         public override string operationName => "GetItemPriceHistory";
-        public override string query => RequestQueries.GetItemPriceHistoryData;
+        public override string query => RequestQueries.Get("GetItemPriceHistory");
     }
 
     internal class Variables : BaseVariables

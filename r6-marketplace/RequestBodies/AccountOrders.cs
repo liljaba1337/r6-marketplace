@@ -7,7 +7,7 @@ namespace r6_marketplace.RequestBodies.AccountOrders.History
     {
         public Root(int limit, int offset) : base(new Variables(limit, offset)) { }
         public override string operationName => "GetTransactionsHistory";
-        public override string query => RequestQueries.GetOrdersHistoryData;
+        public override string query => RequestQueries.Get("GetOrdersHistory");
     }
     internal class Variables : BaseVariables
     {
@@ -27,7 +27,7 @@ namespace r6_marketplace.RequestBodies.AccountOrders.Active
     {
         public Root(int limit, int offset) : base(new Variables(limit, offset)) { }
         public override string operationName => "GetTransactionsPending";
-        public override string query => RequestQueries.GetActiveOrdersData;
+        public override string query => RequestQueries.Get("GetActiveOrders");
     }
     internal class Variables : BaseVariables
     {
@@ -47,7 +47,7 @@ namespace r6_marketplace.RequestBodies.AccountOrders.Sell
     {
         public Root(string itemid, int price) : base(new Variables(itemid, price)) { }
         public override string operationName => "CreateSellOrderMutation";
-        public override string query => RequestQueries.CreateSellOrderData;
+        public override string query => RequestQueries.Get("CreateSellOrder");
     }
     internal class Variables : BaseVariables
     {
@@ -84,7 +84,7 @@ namespace r6_marketplace.RequestBodies.AccountOrders.Buy
     {
         public Root(string itemid, int price) : base(new Variables(itemid, price)) { }
         public override string operationName => "CreateBuyOrderMutation";
-        public override string query => RequestQueries.CreateBuyOrderData;
+        public override string query => RequestQueries.Get("CreateBuyOrder");
     }
     internal class Variables : BaseVariables
     {
@@ -121,7 +121,7 @@ namespace r6_marketplace.RequestBodies.AccountOrders.Cancel
     {
         public Root(string id) : base(new Variables(id)) { }
         public override string operationName => "CancelOrderMutation";
-        public override string query => RequestQueries.CancelOrderData;
+        public override string query => RequestQueries.Get("CancelOrder");
     }
     internal class Variables : BaseVariables
     {

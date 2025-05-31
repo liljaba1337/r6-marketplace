@@ -13,7 +13,7 @@ namespace r6_marketplace.RequestBodies.AccountData.GetBalance
     {
         public Root() : base(new Variables()) { }
         public override string operationName => "GetBalance";
-        public override string query => RequestQueries.GetBalanceData;
+        public override string query => RequestQueries.Get("GetBalance");
     }
     internal class Variables : BaseVariables
     {
@@ -31,7 +31,7 @@ namespace r6_marketplace.RequestBodies.AccountData.GetInventory
             base(new Variables(text, limit, offset, types, tags, sortBy, sortDirection))
         { }
         public override string operationName => "GetSellableItems";
-        public override string query => RequestBodies.RequestQueries.GetInventoryData;
+        public override string query => RequestBodies.RequestQueries.Get("GetInventory");
     }
 
     internal class Variables : BaseVariables

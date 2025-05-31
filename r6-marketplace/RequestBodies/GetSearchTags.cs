@@ -11,7 +11,7 @@ namespace r6_marketplace.RequestBodies.GetSearchTags
     {
         public Root() : base(new Variables()) { }
         public override string operationName => "GetMarketplaceGameConfig";
-        public override string query => RequestQueries.GetSearchTagsData;
+        public override string query => RequestQueries.Get("GetSearchTags");
     }
     internal class Variables : BaseVariables
     {

@@ -19,6 +19,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\RequestBodies\CancelOrder.txt" />
+    <None Remove="Resources\RequestBodies\CreateBuyOrder.txt" />
+    <None Remove="Resources\RequestBodies\CreateSellOrder.txt" />
+    <None Remove="Resources\RequestBodies\GetActiveOrders.txt" />
+    <None Remove="Resources\RequestBodies\GetBalance.txt" />
+    <None Remove="Resources\RequestBodies\GetInventory.txt" />
+    <None Remove="Resources\RequestBodies\GetItem.txt" />
+    <None Remove="Resources\RequestBodies\GetItemPriceHistory.txt" />
+    <None Remove="Resources\RequestBodies\GetOrdersHistory.txt" />
+    <None Remove="Resources\RequestBodies\GetSearchTags.txt" />
+    <None Remove="Resources\RequestBodies\Search.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\RequestBodies\CancelOrder.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\CreateBuyOrder.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\CreateSellOrder.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetActiveOrders.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetBalance.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetInventory.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetItem.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetItemPriceHistory.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetOrdersHistory.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\GetSearchTags.txt" />
+    <EmbeddedResource Include="Resources\RequestBodies\Search.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
