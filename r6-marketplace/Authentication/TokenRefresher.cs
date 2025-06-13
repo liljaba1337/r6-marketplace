@@ -11,6 +11,7 @@ namespace r6_marketplace.Authentication
         private readonly Web web;
         private Timer? refreshTimer;
         internal event TokenRefreshedEventHandler? TokenRefreshed;
+        internal static readonly SemaphoreSlim tokenRefreshLock = new(1, 1);
         internal TokenRefresher(Web web)
         {
             this.web = web;
@@ -31,21 +32,29 @@ namespace r6_marketplace.Authentication
         }
         internal async Task RefreshToken()
         {
-            Console.WriteLine("Refreshing token...");
-            if (web.token == null)
-                return;
-            var data = await SendRefreshRequest();
-            if (data == null || string.IsNullOrEmpty(data.ticket) || data.expiration == default)
-                return;
+            await tokenRefreshLock.WaitAsync();
+            try
+            {
+                if (web.token == null)
+                    return;
 
-            Expiration = data.expiration;
-            TokenRefreshed?.Invoke(web.token, data.ticket, Expiration);
-            web.token = data.ticket;
-            SetupRefreshing(enabled);
+                var data = await SendRefreshRequest();
+                if (data == null || string.IsNullOrEmpty(data.ticket) || data.expiration == default)
+                    return;
+
+                Expiration = data.expiration;
+                TokenRefreshed?.Invoke(web.token, data.ticket, Expiration);
+                web.token = "Ubi_v1 t=" + data.ticket;
+                SetupRefreshing(enabled);
+            }
+            finally
+            {
+                tokenRefreshLock.Release();
+            }
         }
         private async Task<Classes.AuthenticationResponse?> SendRefreshRequest()
         {
-            var response = await web.Post(Data.authUri, body);
+            var response = await web.Post(Data.authUri, body, forceTokenAccess:true);
             if (response.IsSuccessStatusCode)
                 return await response.DeserializeAsyncSafe<Classes.AuthenticationResponse>(false, false);
             return null;

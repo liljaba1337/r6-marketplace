@@ -125,7 +125,7 @@ namespace r6_marketplace.Endpoints
 
             var response = await web.Post(Data.dataUri, body.AsJson());
             var json = await response.DeserializeAsyncSafe<List<Classes.SearchResponse.RawData.Root>>(false);
-            if(json == null || json[0].data.game.marketableItems.nodes.Count == 0)
+            if (json == null || json[0].data.game.marketableItems.nodes.Count == 0)
                 return new List<PurchasableItem>();
 
             return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem(transactionsEndpoints)

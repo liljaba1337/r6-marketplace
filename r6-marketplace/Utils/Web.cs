@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using r6_marketplace.Authentication;
 using r6_marketplace.Extensions;
 
 namespace r6_marketplace.Utils
@@ -29,27 +30,40 @@ namespace r6_marketplace.Utils
         }
 
         private static async Task<HttpResponseMessage> SendRawRequest(
-                 Uri uri,
-                 HttpMethod method,
-                 string? body = null,
-                 Dictionary<string, string>? headers = null,
-                 Web? web = null)
+    Uri uri,
+    HttpMethod method,
+    string? body = null,
+    Dictionary<string, string>? headers = null,
+    Web? web = null,
+    bool forceTokenAccess = false)
         {
-            var request = new HttpRequestMessage(method, uri);
-            if (body != null)
+            bool waitForToken = headers != null && headers.ContainsKey("Authorization") && !forceTokenAccess;
+            if (waitForToken)
+                await TokenRefresher.tokenRefreshLock.WaitAsync();
+
+            try
             {
-                request.Content = new StringContent(body, Encoding.UTF8, "application/json");
-            }
-            if (headers != null)
-            {
-                foreach (var header in headers)
+                var request = new HttpRequestMessage(method, uri);
+
+                if (body != null)
+                    request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+
+                if (headers != null)
                 {
-                    request.Headers.Add(header.Key, header.Value);
+                    foreach (var header in headers)
+                        request.Headers.Add(header.Key, header.Value);
                 }
+
+                HttpClient client = web?.client ?? _defaultClient;
+                return await client.SendAsync(request);
             }
-            HttpClient client = web?.client ?? _defaultClient;
-            return await client.SendAsync(request);
+            finally
+            {
+                if (waitForToken)
+                    TokenRefresher.tokenRefreshLock.Release();
+            }
         }
+
         private static Dictionary<string, string> PrepareHeaders(
             Dictionary<string, string>? headers,
             string? token = null,
@@ -64,6 +78,7 @@ namespace r6_marketplace.Utils
 
             if (token != null)
                 headers["Authorization"] = token;
+
 
             if (useDefaultHeaders)
             {
@@ -89,10 +104,11 @@ namespace r6_marketplace.Utils
     Dictionary<string, string>? headers = null,
     bool sendAuthToken = true,
     bool useDefaultHeaders = true,
-    Data.Local local = Data.Local.en)
+    Data.Local local = Data.Local.en,
+    bool forceTokenAccess = false)
         {
             var finalHeaders = PrepareHeaders(headers, sendAuthToken ? token : null, useDefaultHeaders, local);
-            return await SendRawRequest(uri, HttpMethod.Post, body, finalHeaders, this);
+            return await SendRawRequest(uri, HttpMethod.Post, body, finalHeaders, this, forceTokenAccess);
         }
         internal async Task<HttpResponseMessage> Put(
     Uri uri,
