@@ -135,8 +135,8 @@ namespace r6_marketplace.Endpoints
                 AssetUrl = new Classes.ImageUri(x.item.assetUrl),
                 Type = x.item.type,
                 Tags = x.item.tags,
-                LastSoldAtPrice = x.marketData.lastSoldAt[0].price,
-                LastSoldAtTime = x.marketData.lastSoldAt[0].performedAt,
+                LastSoldAtPrice = x.marketData.lastSoldAt?[0].price ?? -1,
+                LastSoldAtTime = x.marketData.lastSoldAt?[0].performedAt,
                 BuyOrdersStats = x.marketData.buyStats != null ? new OrdersStats()
                 {
                     lowestPrice = x.marketData.buyStats[0].lowestPrice,

@@ -24,14 +24,20 @@ namespace r6_marketplace.Classes.Item
         /// </summary>
         public List<string> Tags { get; internal set; }
         /// <summary>
-        /// The price of the last sale.
+        /// The price of the last sale. May be -1 if the item hasn't been sold in the past 30 days.
         /// </summary>
         public int LastSoldAtPrice { get; internal set; }
         /// <summary>
-        /// The time of the last sale.
+        /// The time of the last sale. May be null if the item hasn't been sold in the past 30 days.
         /// </summary>
         public DateTime? LastSoldAtTime { get; internal set; }
+        /// <summary>
+        /// May be null if there are no sell orders for this item.
+        /// </summary>
         public OrdersStats? SellOrdersStats { get; internal set; }
+        /// <summary>
+        /// May be null if there are no buy orders for this item.
+        /// </summary>
         public OrdersStats? BuyOrdersStats { get; internal set; }
         /// <summary>
         /// Get a link to the item on the Ubisoft marketplace.
