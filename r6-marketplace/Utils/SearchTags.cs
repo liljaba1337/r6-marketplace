@@ -325,7 +325,12 @@ namespace r6_marketplace.Utils
             mafia,
             bot
         }
-        internal static string GetOriginalName(string name)
+
+        /// <summary>
+        /// Returns the original name of a tag, replacing underscores with dashes and removing leading underscores if present.
+        /// May be useful to display the tag in a more readable format.
+        /// </summary>
+        public static string GetOriginalName(string name)
         {
             if (name.Length > 1 && name[0] == '_' && char.IsDigit(name[1]))
             {

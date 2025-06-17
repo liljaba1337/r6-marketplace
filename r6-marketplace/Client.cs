@@ -79,7 +79,7 @@ namespace r6_marketplace
         public async Task<string> Authenticate(string email, string password)
         {
             r6_marketplace.Classes.AuthenticationResponse response =
-                await Authentication.Authentication.Authenticate(email, password);
+                await Authentication.Authentication.Authenticate(email, password, web);
             string token = "Ubi_v1 t=" + response.ticket;
             web.token = token;
             return token;

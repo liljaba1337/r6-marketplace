@@ -80,7 +80,7 @@ namespace r6_marketplace.Endpoints
             return await _SearchItem(name, types, tags, sortBy, sortDirection, limit, offset, local);
         }
 
-        
+
 
         /// <summary>
         /// Search for items in the marketplace.
@@ -91,7 +91,6 @@ namespace r6_marketplace.Endpoints
         /// Prefer using <see cref="SearchItem"/>, which provides enum-based filters and better usability.
         /// </remarks>
         /// <returns>A read-only list of matching <see cref="PurchasableItem"/> objects.</returns>
-        [Obsolete("This method is kept for compatibility reasons. Prefer using SearchItem with enum-based filters instead.")]
         public async Task<IReadOnlyList<PurchasableItem>> SearchItemUnrestricted(
             string name,
             List<string> types,
@@ -125,10 +124,17 @@ namespace r6_marketplace.Endpoints
 
             var response = await web.Post(Data.dataUri, body.AsJson());
             var json = await response.DeserializeAsyncSafe<List<Classes.SearchResponse.RawData.Root>>(false);
-            if (json == null || json[0].data.game.marketableItems.nodes.Count == 0)
-                return new List<PurchasableItem>();
+            try
+            {
+                if (json == null || json[0].data.game.marketableItems.nodes.Count == 0)
+                    return new List<PurchasableItem>();
+            }
+            catch
+            {
+                Console.WriteLine(await response.Content.ReadAsStringAsync()); // For debugging purposes, remove in production
+            }
 
-            return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem(transactionsEndpoints)
+                return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem(transactionsEndpoints)
             {
                 ID = x.item.itemId,
                 Name = x.item.name,

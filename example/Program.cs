@@ -45,17 +45,6 @@ namespace Example
             // Get search tags (temporary)
             var tags = await client.SearchEndpoints.GetSearchTags();
 
-            // Search items
-            var items = await client.SearchEndpoints.SearchItem(
-                name: "Black Ice",
-                types: new List<string> { "WeaponSkin" },
-                tags: new List<string> { "C8-SFW" },
-                sortBy: r6_marketplace.Endpoints.SearchEndpoints.SortBy.LastSalePrice,
-                sortDirection: r6_marketplace.Endpoints.SearchEndpoints.SortDirection.ASC,
-                limit: 40,
-                offset: 0
-            );
-
             // Get your balance
             int balance = await client.AccountEndpoints.GetBalance();
 
@@ -63,11 +52,6 @@ namespace Example
             var inventory = await client.AccountEndpoints.GetInventory(
                 limit: 500
             );
-
-            // And its total value
-            var totalValue = inventory.GetInventoryValue();
-            Console.WriteLine($"Total value: {totalValue.TotalValue}");
-            Console.WriteLine($"Total value without fee: {totalValue.TotalValueWithoutFee}");
 
             // Get your open orders
             IReadOnlyList<Order> orders = await client.TransactionsEndpoints.GetActiveOrders();

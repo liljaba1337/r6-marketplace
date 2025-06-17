@@ -14,20 +14,23 @@ namespace r6_marketplace.Classes
     /// </summary>
     public class ImageUri
     {
-        private readonly Uri _value;
+        /// <summary>
+        /// The URI of the image.
+        /// </summary>
+        public readonly Uri Value;
         internal ImageUri(string value)
         {
-            _value = new Uri(value);
+            Value = new Uri(value);
         }
-        public static implicit operator string(ImageUri str) => str._value.ToString();
-        public static implicit operator Uri(ImageUri str) => str._value;
-        public override string ToString() => _value.ToString();
+        public static implicit operator string(ImageUri str) => str.Value.ToString();
+        public static implicit operator Uri(ImageUri str) => str.Value;
+        public override string ToString() => Value.ToString();
         /// <summary>
         /// Download the image as a stream.
         /// </summary>
         public async Task<Stream> DownloadImageAsStream()
         {
-            HttpResponseMessage response = await Web.Get(_value);
+            HttpResponseMessage response = await Web.Get(Value);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStreamAsync();
         }
@@ -46,8 +49,8 @@ namespace r6_marketplace.Classes
 
         // Equality members
         public override bool Equals(object? obj) => Equals(obj as ImageUri);
-        public bool Equals(ImageUri? other) => other != null && _value.Equals(other._value);
-        public override int GetHashCode() => _value.GetHashCode();
+        public bool Equals(ImageUri? other) => other != null && Value.Equals(other.Value);
+        public override int GetHashCode() => Value.GetHashCode();
         public static bool operator ==(ImageUri? left, ImageUri? right)
         {
             if (ReferenceEquals(left, right))

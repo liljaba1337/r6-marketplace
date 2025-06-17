@@ -7,7 +7,7 @@ namespace r6_marketplace.Authentication
 {
     internal static class Authentication
     {
-        internal static async Task<Classes.AuthenticationResponse>Authenticate(string email, string password)
+        internal static async Task<Classes.AuthenticationResponse>Authenticate(string email, string password, Web web)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -23,12 +23,14 @@ namespace r6_marketplace.Authentication
             {
                 { "Authorization", $"Basic {credentialsb64}" }
             };
-            var response = await Utils.Web.Post(
+            var response = await web.Post(
                 Data.authUri,
                 data,
                 headers,
                 true
             );
+            Console.WriteLine(await response.Content.ReadAsStringAsyncSafe());
+
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new Utils.Exceptions.InvalidCredentialsException("Either your login or password is incorrect.");
