@@ -29,7 +29,6 @@ namespace r6_marketplace.Authentication
                 headers,
                 true
             );
-            Console.WriteLine(await response.Content.ReadAsStringAsyncSafe());
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {

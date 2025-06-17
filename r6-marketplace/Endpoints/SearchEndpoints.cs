@@ -131,7 +131,7 @@ namespace r6_marketplace.Endpoints
             }
             catch
             {
-                Console.WriteLine(await response.Content.ReadAsStringAsync()); // For debugging purposes, remove in production
+                return new List<PurchasableItem>();
             }
 
                 return json[0].data.game.marketableItems.nodes.Select(x => new PurchasableItem(transactionsEndpoints)
