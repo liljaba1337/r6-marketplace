@@ -29,7 +29,6 @@ namespace r6_marketplace.Authentication
                 headers,
                 true
             );
-
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new Utils.Exceptions.InvalidCredentialsException("Either your login or password is incorrect.");

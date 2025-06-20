@@ -10,11 +10,14 @@
     <Title>R6 Marketplace API Wrapper</Title>
     <Authors>liljaba1337</Authors>
     <Description>A .NET wrapper for the Rainbow Six Siege Marketplace API.</Description>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <PackageReadmeFile>nugetREADME.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/liljaba1337/r6-marketplace</RepositoryUrl>
     <PackageTags>ubisoft;r6;rainbow6;rainbowsix;r6s;rainbowsixsiege;rainbow6siege</PackageTags>
-    <PackageReleaseNotes>Fixed incorrect token format being saved during refresh and a rather rare race condition where an outdated token could be used before the new one was applied.</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixed an error with `Authenticate()` not using custom http clients.
+- `ImageUri` now has the `Value` of type `Uri`.
+- `SearchTags` now has the `GetOriginalName()` method to return readable tags.
+- Added XAML comments.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/liljaba1337/r6-marketplace</PackageProjectUrl>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
