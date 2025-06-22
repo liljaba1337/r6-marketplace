@@ -27,7 +27,7 @@ namespace r6_marketplace.Authentication
                 Data.authUri,
                 data,
                 headers,
-                true
+                false
             );
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {

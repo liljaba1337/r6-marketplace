@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace r6_marketplace.Utils
 {
@@ -25,7 +20,7 @@ namespace r6_marketplace.Utils
                     }
                     else if (allowedEnumTypes.Contains(element.GetType()))
                     {
-                        tags.Add(GetOriginalName(element.ToString()));
+                        tags.Add(GetAPIName(element.ToString()));
                     }
                 }
             }
@@ -52,42 +47,42 @@ namespace r6_marketplace.Utils
         }
         public enum Weapon
         {
-            AUG_A2,
+            AUG__A2,
             SG_CQB,
             GSH_18,
-            MK17_CQB,
+            MK17__CQB,
             M590A1,
             LFP586,
             V308,
             LMG_E,
-            _9mm_C1,
-            SDP_9mm,
+            _9mm__C1,
+            SDP__9mm,
             TYPE_89,
             M1014,
             OTs_03,
             M12,
             _417,
             K1A,
-            M45_MEUSOC,
-            Bailiff_410,
+            M45__MEUSOC,
+            Bailiff__410,
             _556XI,
             USP40,
             TCSG12,
             ARX200,
             G8A1,
             SUPERNOVA,
-            COMMANDO_9,
+            COMMANDO__9,
             CAMRS,
             AR_1550,
             P9,
             AK_12,
-            SUPER_90,
+            SUPER__90,
             P_10C,
             PARA_308,
             MP5K,
             M870,
-            SPEAR_308,
-            _57_USG,
+            SPEAR__308,
+            _57__USG,
             MP5,
             UMP45,
             FO_12,
@@ -97,33 +92,33 @@ namespace r6_marketplace.Utils
             C7E,
             AR33,
             AK_74M,
-            _1911_TACOPS,
-            T_5_SMG,
+            _1911__TACOPS,
+            T_5__SMG,
             SASG_12,
             SPSMG9,
             DP27,
-            SUPER_SHORTY,
-            VECTOR_45_ACP,
+            SUPER__SHORTY,
+            VECTOR__45__ACP,
             ACS12,
-            SIX12_SD,
+            SIX12__SD,
             F2,
             L85A2,
-            ALDA_556,
-            Mx4_Storm,
-            M249_SAW,
-            _552_COMMANDO,
+            ALDA__556,
+            Mx4__Storm,
+            M249__SAW,
+            _552__COMMANDO,
             SPAS_12,
             POF9,
             PCX_33,
             FMG_9,
             _6P41,
-            SCORPION_EVO_3_A1,
+            SCORPION__EVO__3__A1,
             BOSG122,
             M762,
-            T_95_LSW,
+            T_95__LSW,
             P90,
-            KERATOS_357,
-            Mk_14_EBR,
+            KERATOS__357,
+            Mk__14__EBR,
             SR_25,
             UZK50GI,
             SPAS_15,
@@ -132,7 +127,7 @@ namespace r6_marketplace.Utils
             MP5SD,
             P229,
             GONNE_6,
-            BEARING_9,
+            BEARING__9,
             M249,
             PDW9,
             PMM,
@@ -142,22 +137,22 @@ namespace r6_marketplace.Utils
             _9x19VSN,
             D_50,
             R4_C,
-            _416_C_CARBINE,
+            _416_C__CARBINE,
             G36C,
-            MK1_9mm,
+            MK1__9mm,
             MP7,
             SMG_12,
             M4,
-            C75_Auto,
+            C75__Auto,
             ITA12S,
-            P226_MK_25,
-            AUG_A3,
+            P226__MK__25,
+            AUG__A3,
             C8_SFW,
-            P10_RONI,
+            P10__RONI,
             PRB92,
             CSRX300,
             RG15,
-            _44_Mag_Semi_Auto
+            _44__Mag__Semi_Auto
         }
         public enum Operator
         {
@@ -327,16 +322,31 @@ namespace r6_marketplace.Utils
         }
 
         /// <summary>
-        /// Returns the original name of a tag, replacing underscores with dashes and removing leading underscores if present.
-        /// May be useful to display the tag in a more readable format.
+        /// Returns the original name of a tag, replacing underscores with dashes, inserting spaces and removing leading underscores if present
         /// </summary>
-        public static string GetOriginalName(string name)
+        public static string GetOriginalName(this Enum Name) => Name.ToString().GetOriginalName();
+        /// <summary>
+        /// Returns the original name of a tag, replacing underscores with dashes, inserting spaces and removing leading underscores if present
+        /// </summary>
+        public static string GetOriginalName(this string Name)
+        {
+            if (Name.Length > 1 && Name[0] == '_' && char.IsDigit(Name[1]))
+            {
+                Name = Name.Substring(1);
+            }
+            Name = Name.Replace("__", " ").Replace("_", "-");
+            return Name;
+        }
+        /// <summary>
+        /// Returns the name of a tag, used by the Ubisoft API
+        /// </summary>
+        public static string GetAPIName(string name)
         {
             if (name.Length > 1 && name[0] == '_' && char.IsDigit(name[1]))
             {
                 name = name.Substring(1);
             }
-            name = name.Replace("_", "-");
+            name = name.Replace("__", " ").Replace("_", "-").Replace(" ", "_"); // fuck this
             return name;
         }
     }
