@@ -56,7 +56,7 @@ Install-Package r6-marketplace
 
 ### [Documentation](https://github.com/liljaba1337/r6-marketplace/wiki)
 
-### [Example](https://github.com/liljaba1337/r6-marketplace/tree/master/example) (I update it rarely so it may be outdated)
+### [My own project based on this package](https://github.com/liljaba1337/r6marketplaceclient)
 
 ---
 
