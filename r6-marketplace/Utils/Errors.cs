@@ -14,5 +14,10 @@ namespace r6_marketplace.Utils.Errors.API
     internal class ErrorDetail
     {
         public string message { get; set; }
+        public Extensions extensions { get; set; }
+    }
+    internal class Extensions
+    {
+        public string code { get; set; }
     }
 }

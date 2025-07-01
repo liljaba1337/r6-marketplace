@@ -35,7 +35,7 @@ namespace r6_marketplace.Extensions
             => errors?.Any(e => e.errors?.Any(err => err.message.Contains("404")) == true) == true;
         private static bool IsInvalidTokenError(List<ApiError>? errors)
             => errors?.Any(e => e.errors?.Any(err => err.message.Contains("The authentication ticket is invalid") ||
-            err.message.Contains("Ticket is expired")) == true) == true;
+            err.message.Contains("Ticket is expired") || err.extensions.code == "INVALID_TICKET") == true) == true;
         internal static string Format(this r6_marketplace.Utils.Data.Local lang)
         {
             return lang switch

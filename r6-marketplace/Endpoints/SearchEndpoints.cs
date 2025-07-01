@@ -1,4 +1,5 @@
-﻿using r6_marketplace.Classes.Item;
+﻿using System.Diagnostics;
+using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
 
@@ -123,6 +124,7 @@ namespace r6_marketplace.Endpoints
                 name, limit, offset, types, tags, sortBy, sortDirection);
 
             var response = await web.Post(Data.dataUri, body.AsJson());
+
             var json = await response.DeserializeAsyncSafe<List<Classes.SearchResponse.RawData.Root>>(false);
             try
             {

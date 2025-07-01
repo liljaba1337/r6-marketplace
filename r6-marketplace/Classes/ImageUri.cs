@@ -17,7 +17,30 @@ namespace r6_marketplace.Classes
         /// <summary>
         /// The URI of the image.
         /// </summary>
-        public readonly Uri Value;
+        public Uri Value { get; private set; }
+        /// <summary>
+        /// The width of the image. If none is set, this will return -1 and the image will be parsed in the original width.
+        /// </summary>
+        public int Width
+        {
+            get
+            {
+                var query = System.Web.HttpUtility.ParseQueryString(Value.Query);
+                if (int.TryParse(query["imwidth"], out int width))
+                    return width;
+                return -1;
+            }
+            set
+            {
+                var uriBuilder = new UriBuilder(Value);
+                var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+
+                query["imwidth"] = value.ToString();
+                uriBuilder.Query = query.ToString();
+
+                Value = uriBuilder.Uri;
+            }
+        }
         internal ImageUri(string value)
         {
             Value = new Uri(value);
@@ -28,9 +51,10 @@ namespace r6_marketplace.Classes
         /// <summary>
         /// Download the image as a stream.
         /// </summary>
-        public async Task<Stream> DownloadImageAsStream()
+        /// <param name="width">Optional width to resize the image to. If not specified, <see cref="Width"/> will be used</param>
+        public async Task<Stream> DownloadImageAsStream(int width = -1)
         {
-            HttpResponseMessage response = await Web.Get(Value);
+            HttpResponseMessage response = await Web.Get(new Uri(Value + "?imwidth=" + width));
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStreamAsync();
         }
@@ -38,9 +62,10 @@ namespace r6_marketplace.Classes
         /// Download the image and save it to the specified path.
         /// </summary>
         /// <param name="path">The path to save this image to.</param>
-        public async Task DownloadImageAsFile(string path)
+        /// <param name="width">Optional width to resize the image to. If not specified, <see cref="Width"/> will be used</param>
+        public async Task DownloadImageAsFile(string path, int width = -1)
         {
-            using (var stream = await DownloadImageAsStream())
+            using (var stream = await DownloadImageAsStream(width))
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await stream.CopyToAsync(fileStream);
