@@ -35,15 +35,17 @@ namespace r6_marketplace.Utils
                 typeof(EsportsTeam),
                 typeof(Event)
             };
+
+        #region Enums
         public enum Rarity
         {
-            rarity_uncommon,
-            rarity_rare,
+            rarity__uncommon,
+            rarity__rare,
             /// <summary>
-            /// This is epic I believe
+            /// Epic
             /// </summary>
-            rarity_superrare,
-            rarity_legendary,
+            rarity__superrare,
+            rarity__legendary,
         }
         public enum Weapon
         {
@@ -286,22 +288,22 @@ namespace r6_marketplace.Utils
         }
         public enum EsportsTeam
         {
-            Natus_Vincere,
-            FAV_gaming,
-            Santos_E_Sports,
-            MNM_Gaming,
+            Natus__Vincere,
+            FAV__gaming,
+            Santos__E_Sports,
+            MNM__Gaming,
             Mirage,
             Astralis,
-            Team_Empire,
+            Team__Empire,
             QConfirm,
-            GUTS_Gaming,
+            GUTS__Gaming,
             Heroic,
-            Chiefs_Esports_Club,
+            Chiefs__Esports__Club,
             KOI,
-            Team_Vitality,
-            _00_NATION,
-            Parabellum_Esports,
-            Giants_Gaming,
+            Team__Vitality,
+            _00__NATION,
+            Parabellum__Esports,
+            Giants__Gaming,
             Cloud9,
             ORDER,
             XSET
@@ -320,15 +322,22 @@ namespace r6_marketplace.Utils
             mafia,
             bot
         }
+        #endregion
 
         /// <summary>
-        /// Returns the original name of a tag, replacing underscores with dashes, inserting spaces and removing leading underscores if present
+        /// Returns the user-friendly name of a tag
         /// </summary>
-        public static string GetOriginalName(this Enum Name) => Name.ToString().GetOriginalName();
+        /// <remarks>
+        /// Removes leading underscores<br></br>Replaces underscores with dashes<br></br>Replaces double underscores with spaces
+        /// </remarks>
+        public static string GetOriginalName(this Enum Name) => GetOriginalName(Name.ToString());
         /// <summary>
-        /// Returns the original name of a tag, replacing underscores with dashes, inserting spaces and removing leading underscores if present
+        /// Returns the user-friendly name of a tag
         /// </summary>
-        public static string GetOriginalName(this string Name)
+        /// <remarks>
+        /// Removes leading underscores<br></br>Replaces underscores with dashes<br></br>Replaces double underscores with spaces
+        /// </remarks>
+        public static string GetOriginalName(string Name)
         {
             if (Name.Length > 1 && Name[0] == '_' && char.IsDigit(Name[1]))
             {
@@ -338,15 +347,21 @@ namespace r6_marketplace.Utils
             return Name;
         }
         /// <summary>
-        /// Returns the name of a tag, used by the Ubisoft API
+        /// Returns the name of a tag compatible with the Ubisoft API
         /// </summary>
+        /// <remarks>
+        /// Removes leading underscores<br></br>Replaces underscores with dashes<br></br>Replaces double underscores with single underscores
+        /// </remarks>
         public static string GetAPIName(string name)
         {
             if (name.Length > 1 && name[0] == '_' && char.IsDigit(name[1]))
             {
                 name = name.Substring(1);
             }
-            name = name.Replace("__", " ").Replace("_", "-").Replace(" ", "_"); // fuck this
+            name = name
+                .Replace("__", "\u0001") // \u0001 is used rarely so I use it as a temporary placeholder
+                .Replace("_", "-")
+                .Replace("\u0001", "_");
             return name;
         }
     }

@@ -84,23 +84,29 @@ namespace r6_marketplace.Endpoints
 
 
         /// <summary>
-        /// Search for items in the marketplace.
-        /// This method is kept as a fallback in case new filters are introduced that are not yet supported by this package.
+        /// Search for items in the marketplace with custom filters and without type safety.
         /// </summary>
         /// <remarks>
-        /// Direct use of this method is not recommended due to its complexity and lack of type safety.
-        /// Prefer using <see cref="SearchItem"/>, which provides enum-based filters and better usability.
+        /// Warning:<br></br> If you use tags/types from <see cref="SearchTags"/>, you must use <see cref="SearchTags.GetAPIName(string)"/> on each tag
         /// </remarks>
+        /// <param name="name">The name of the item to search for.</param>
+        /// <param name="types">A collection of item types (<see cref="SearchTags.Type"/>)</param>
+        /// <param name="tags">A collection of item tags (<see cref="SearchTags"/> EXCEPT <see cref="SearchTags.Type"/>)</param>
+        /// <param name="sortBy">The method of sorting.</param>
+        /// <param name="sortDirection">The direction of sorting.</param>
+        /// <param name="limit">The maximum number of items to return. Must be between 0 and 500.</param>
+        /// <param name="offset">The number of items to skip before returning results. Must be non-negative.</param>
+        /// <param name="local">The locale to use for the search results. Defaults to English (en).</param>
         /// <returns>A read-only list of matching <see cref="PurchasableItem"/> objects.</returns>
         public async Task<IReadOnlyList<PurchasableItem>> SearchItemUnrestricted(
             string name,
             List<string> types,
             List<string> tags,
-            SortBy sortBy,
-            SortDirection sortDirection,
-            int limit,
-            int offset,
-            Data.Local local)
+            SortBy sortBy = SortBy.PurchaseAvailaible,
+            SortDirection sortDirection = SortDirection.DESC,
+            int limit = 40,
+            int offset = 0,
+            Data.Local local = Data.Local.en)
             => await _SearchItem(name, types, tags, sortBy, sortDirection, limit, offset, local);
 
         private async Task<IReadOnlyList<PurchasableItem>> _SearchItem(
