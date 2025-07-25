@@ -46,6 +46,10 @@ namespace r6_marketplace.Utils
             /// </summary>
             rarity__superrare,
             rarity__legendary,
+            /// <summary>
+            /// Couldn't parse the rarity from the API.
+            /// </summary>
+            Unknown
         }
         public enum Weapon
         {
@@ -363,6 +367,15 @@ namespace r6_marketplace.Utils
                 .Replace("_", "-")
                 .Replace("\u0001", "_");
             return name;
+        }
+
+        internal static Rarity TryParseRarity(string rarity)
+        {
+            if (Enum.TryParse<Rarity>(rarity.Replace("_", "__"), out var result))
+            {
+                return result;
+            }
+            return Rarity.Unknown;
         }
     }
 }

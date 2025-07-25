@@ -17,6 +17,8 @@ namespace r6_marketplace.Classes.Item
         private readonly TransactionsEndpoints transactionsEndpoints;
         internal SellableItem(TransactionsEndpoints transactionsEndpoints) { this.transactionsEndpoints = transactionsEndpoints; }
 
+        new public readonly bool IsOwned = true;
+
         /// <summary>
         /// Sell this item.
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json;
 using r6_marketplace.Classes.Item;
 using r6_marketplace.Extensions;
 using r6_marketplace.Utils;
@@ -24,7 +25,6 @@ namespace r6_marketplace.Endpoints
             var response = await web.Post(Data.dataUri, 
                 JsonSerializer.Serialize(new RequestBodies.GetItemDetails.Root(itemId).AsList()),
                 local:lang);
-            
             var rawitem = await response.DeserializeAsyncSafe<List<Classes.Item.RawData.Root>>();
             if (rawitem is not { Count: > 0 })
                 return null;
@@ -36,8 +36,14 @@ namespace r6_marketplace.Endpoints
                 ID = rawitem[0].data.game.marketableItem.item.itemId,
                 Name = rawitem[0].data.game.marketableItem.item.name,
                 AssetUrl = new Classes.ImageUri(rawitem[0].data.game.marketableItem.item.assetUrl),
+                IsOwned = rawitem[0].data.game.marketableItem.item.viewer.meta.isOwned,
+                Target = rawitem[0].data.game.marketableItem.item.tags.ElementAtOrDefault(0) ?? string.Empty,
+                Rarity = SearchTags.TryParseRarity(
+                    rawitem[0].data.game.marketableItem.item.tags.ElementAtOrDefault(rawitem[0].data.game.marketableItem.item.tags.Count - 5) ?? "Unknown"),
                 Type = rawitem[0].data.game.marketableItem.item.type,
                 Tags = rawitem[0].data.game.marketableItem.item.tags,
+                LastSoldAtPrice = rawitem[0].data.game.marketableItem.marketData.lastSoldAt?[0].price ?? -1,
+                LastSoldAtTime = rawitem[0].data.game.marketableItem.marketData.lastSoldAt?[0].performedAt,
                 BuyOrdersStats = buyStats != null ? new OrdersStats()
                 {
                     lowestPrice = buyStats[0].lowestPrice,

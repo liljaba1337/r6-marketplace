@@ -10,6 +10,8 @@ namespace r6_marketplace.Classes.Item
         private readonly TransactionsEndpoints transactionsEndpoints;
         internal PurchasableItem(TransactionsEndpoints transactionsEndpoints) { this.transactionsEndpoints = transactionsEndpoints; }
 
+        new public readonly bool IsOwned = false;
+
         /// <summary>
         /// Create a buy order for this item.
         /// </summary>

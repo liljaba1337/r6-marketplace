@@ -9,13 +9,42 @@ using r6_marketplace.Utils;
 
 namespace r6_marketplace.Classes.Item
 {
+    /// <summary>
+    /// Basic representation of an item on the marketplace.
+    /// </summary>
     public class Item
     {
-        /// <returns>The name of the item.</returns>
+        /// <summary>
+        /// Returns the name of the item.
+        /// </summary>
         public override string ToString() => Name;
+        /// <summary>
+        /// Unique identifier of the item.
+        /// </summary>
         public string ID { get; internal set; }
+        /// <summary>
+        /// Name of the item.
+        /// </summary>
         public string Name { get; internal set; }
+        /// <summary>
+        /// Asset URL of a picture if this item.
+        /// </summary>
         public ImageUri AssetUrl { get; internal set; }
+        public bool IsOwned { get; internal set; }
+        /// <summary>
+        /// Weapon name, operator name, or other target of the item.
+        /// </summary>
+        /// <remarks>
+        /// This is extracted from a list of item tags, so it may not always be accurate.
+        /// </remarks>
+        public string Target { get ; internal set; }
+        /// <summary>
+        /// Rarity of the item (if exists)
+        /// </summary>
+        /// <remarks>
+        /// This is extracted from a list of item tags, so it may not always be accurate.
+        /// </remarks>
+        public SearchTags.Rarity Rarity { get; internal set; }
         public string Type { get; internal set; }
         /// <summary>
         /// Weapon name is usually at index 0, release year/season at index 3, and rarity at index 5.
